@@ -1,4 +1,4 @@
-# Ograf Builder — Design Spec
+# GrafStudio — Design Spec
 
 ## Résumé du besoin
 
@@ -71,7 +71,7 @@ Composer (état projet)
 
 ## Modèle de données du projet
 
-Un projet Ograf Builder représente un graphique lower third complet. Voici le modèle central :
+Un projet GrafStudio représente un graphique lower third complet. Voici le modèle central :
 
 ```typescript
 interface OgrafProject {
@@ -365,5 +365,5 @@ Ces fonctionnalités sont explicitement exclues de la V1 :
 - Support non-real-time (`goToTime`, `setActionsSchedule`)
 - Templates prédéfinis / bibliothèque
 - Backend / API serveur
-- Import de projets existants (hors format Ograf Builder)
+- Import de projets existants (hors format GrafStudio)
 - Édition multi-graphiques simultanée
