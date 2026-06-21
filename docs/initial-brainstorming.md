@@ -11,6 +11,8 @@
 - **Sortie** : Web Component OGraf v1 conforme + manifeste `.ograf.json`
 - **Stack** : Nuxt 4 + Vue 3 + shadcn-vue + Tailwind CSS v4
 - **Architecture** : Monolithe Nuxt avec iframe sandbox (Approche A)
+- **Thème UI** : Dark mode uniquement, style DaVinci Resolve (fond sombre #1a1a2e / #16213e, panneaux gris foncé, accents bleu/orange, typographie compacte)
+- **Navigation** : Onglets centrés en bas de l'écran (style application professionnelle broadcast)
 
 ## Architecture globale et structure des pages
 
@@ -19,7 +21,7 @@ L'application Nuxt comporte **2 routes principales** correspondant aux onglets :
 - `/composer` — L'éditeur de graphiques lower thirds
 - `/controller` — L'interface Preview/Program avec 2 players iframe
 
-Un **layout partagé** (`app.vue`) fournit la barre d'onglets de navigation en haut.
+Un **layout partagé** (`app.vue`) fournit la barre d'onglets de navigation **centrée en bas** de l'écran, dans un style inspiré de DaVinci Resolve.
 
 ### Structure des dossiers
 
