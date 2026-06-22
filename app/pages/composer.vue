@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { computed, onMounted } from "vue";
-import { FilePlus, Save, Download } from "@lucide/vue";
+import { computed, onMounted, onUnmounted } from "vue";
+import { FilePlus, Save, Download, FileDown } from "@lucide/vue";
 import { useProjectStore } from "~/composables/useProjectStore";
 import { toast } from "vue-sonner";
 import type { KeyframeTrack, Keyframe } from "~/lib/ograf/types";
 import { addKeyframe, removeKeyframe } from "~/composables/useKeyframeEngine";
+import { downloadProjectZip, exportProjectJSON } from "~/lib/ograf/export";
 
 useHead({ title: "Composer" });
 
@@ -20,7 +21,19 @@ onMounted(() => {
     store.addElement("shape");
     store.addElement("text");
   }
+  globalThis.addEventListener("keydown", handleKeydown);
 });
+
+onUnmounted(() => {
+  globalThis.removeEventListener("keydown", handleKeydown);
+});
+
+function handleKeydown(e: KeyboardEvent) {
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+    e.preventDefault();
+    handleSave();
+  }
+}
 
 function handleSave() {
   store.saveCurrent();
@@ -32,11 +45,35 @@ function handleNew() {
   toast({ title: "Nouveau projet créé" });
 }
 
-function handleExport() {
-  toast({
-    title: "Export",
-    description: "L'export ZIP sera disponible en Phase 6",
-  });
+async function handleExport() {
+  if (!project.value) return;
+  try {
+    await downloadProjectZip(project.value);
+    toast({
+      title: "Export OGraf réussi",
+      description: `${project.value.name}.ograf.zip téléchargé`,
+    });
+  } catch (e) {
+    toast({
+      title: "Erreur d'export",
+      description: e instanceof Error ? e.message : "Erreur inconnue",
+      variant: "destructive",
+    });
+  }
+}
+
+function handleExportJSON() {
+  if (!project.value) return;
+  try {
+    exportProjectJSON(project.value);
+    toast({ title: "Projet exporté (JSON)" });
+  } catch (e) {
+    toast({
+      title: "Erreur d'export JSON",
+      description: e instanceof Error ? e.message : "Erreur inconnue",
+      variant: "destructive",
+    });
+  }
 }
 
 function handleAddKeyframe(track: KeyframeTrack, keyframe: Keyframe) {
@@ -104,9 +141,13 @@ function handleAddTrack(elementId: string, property: string) {
           <Save class="size-3.5" />
           Sauvegarder
         </Button>
+        <Button variant="ghost" size="sm" @click="handleExportJSON">
+          <FileDown class="size-3.5" />
+          JSON
+        </Button>
         <Button variant="default" size="sm" @click="handleExport">
           <Download class="size-3.5" />
-          Exporter
+          Exporter OGraf
         </Button>
       </div>
     </header>

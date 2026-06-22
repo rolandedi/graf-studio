@@ -41,7 +41,11 @@ onMounted(async () => {
 });
 
 // Preview controls
-async function previewPlay(params: { goto?: number; delta?: number; skipAnimation?: boolean }) {
+async function previewPlay(params: {
+  goto?: number;
+  delta?: number;
+  skipAnimation?: boolean;
+}) {
   try {
     await previewFrameRef.value?.bridge.playAction(params);
   } catch (e) {
@@ -74,7 +78,11 @@ async function previewUpdate(data: Record<string, unknown>) {
 }
 
 // Program controls
-async function programPlay(params: { goto?: number; delta?: number; skipAnimation?: boolean }) {
+async function programPlay(params: {
+  goto?: number;
+  delta?: number;
+  skipAnimation?: boolean;
+}) {
   try {
     await programFrameRef.value?.bridge.playAction(params);
   } catch (e) {
@@ -110,7 +118,10 @@ async function programUpdate(data: Record<string, unknown>) {
 async function copyToProgram() {
   programData.value = { ...previewData.value };
   await programUpdate(programData.value);
-  toast({ title: "Copié vers Program", description: "Les données du Preview ont été transférées" });
+  toast({
+    title: "Copié vers Program",
+    description: "Les données du Preview ont été transférées",
+  });
 }
 
 // Load project from list
@@ -169,7 +180,9 @@ async function loadProject(id: string) {
           @goto="previewGoto"
         />
         <div class="border-t border-border bg-card/30">
-          <div class="border-b border-border px-3 py-1.5 text-xs font-semibold text-foreground">
+          <div
+            class="border-b border-border px-3 py-1.5 text-xs font-semibold text-foreground"
+          >
             Données Preview
           </div>
           <ControllerDataForm
@@ -198,7 +211,9 @@ async function loadProject(id: string) {
           @goto="programGoto"
         />
         <div class="border-t border-border bg-card/30">
-          <div class="border-b border-border px-3 py-1.5 text-xs font-semibold text-foreground">
+          <div
+            class="border-b border-border px-3 py-1.5 text-xs font-semibold text-foreground"
+          >
             Données Program
           </div>
           <ControllerDataForm

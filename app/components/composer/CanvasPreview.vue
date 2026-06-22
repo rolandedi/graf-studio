@@ -34,14 +34,23 @@ function regenerate() {
   bridge.reset();
 }
 
+const MAX_RETRIES = 3;
+const retryCount = ref(0);
+
 async function loadGraphic() {
   try {
     await bridge.load({
       data: props.project.defaultData,
       renderType: "realtime",
     });
+    retryCount.value = 0;
   } catch (e) {
     console.error("Failed to load graphic:", e);
+    if (retryCount.value < MAX_RETRIES) {
+      retryCount.value++;
+      console.log(`Retrying load (${retryCount.value}/${MAX_RETRIES})...`);
+      setTimeout(() => loadGraphic(), 500);
+    }
   }
 }
 
@@ -150,6 +159,7 @@ onMounted(() => {
         <iframe
           ref="iframeRef"
           :src="blobUrl"
+          title="OGraf Graphic Preview"
           class="absolute inset-0 border-0"
           sandbox="allow-scripts allow-same-origin"
           :style="iframeStyle"

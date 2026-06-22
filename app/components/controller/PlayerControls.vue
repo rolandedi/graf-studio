@@ -37,12 +37,7 @@ function gotoStep(step: number) {
 <template>
   <div class="flex items-center gap-2 border-t border-border px-3 py-2">
     <!-- Play controls -->
-    <Button
-      variant="default"
-      size="sm"
-      :disabled="!isLoaded"
-      @click="playNext"
-    >
+    <Button variant="default" size="sm" :disabled="!isLoaded" @click="playNext">
       <Play class="size-3.5" />
       Play
     </Button>
@@ -55,12 +50,7 @@ function gotoStep(step: number) {
       <SkipForward class="size-3.5" />
       Skip
     </Button>
-    <Button
-      variant="ghost"
-      size="sm"
-      :disabled="!isLoaded"
-      @click="stop"
-    >
+    <Button variant="ghost" size="sm" :disabled="!isLoaded" @click="stop">
       <Square class="size-3.5" />
       Stop
     </Button>
@@ -86,7 +76,9 @@ function gotoStep(step: number) {
           variant="ghost"
           size="sm"
           class="h-6 px-2 text-xs"
-          :class="currentStep === s - 1 ? 'bg-primary text-primary-foreground' : ''"
+          :class="
+            currentStep === s - 1 ? 'bg-primary text-primary-foreground' : ''
+          "
           @click="gotoStep(s - 1)"
         >
           {{ s - 1 }}

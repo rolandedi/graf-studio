@@ -105,9 +105,7 @@ onMounted(() => {
 <template>
   <div class="flex h-full flex-col">
     <!-- Player label -->
-    <div
-      class="flex items-center gap-2 border-b border-border px-3 py-1.5"
-    >
+    <div class="flex items-center gap-2 border-b border-border px-3 py-1.5">
       <div
         class="size-2 rounded-full"
         :style="{ background: labelColor ?? 'var(--primary)' }"
@@ -119,7 +117,9 @@ onMounted(() => {
     </div>
 
     <!-- Player iframe -->
-    <div class="flex flex-1 items-center justify-center overflow-hidden bg-black/40 p-3">
+    <div
+      class="flex flex-1 items-center justify-center overflow-hidden bg-black/40 p-3"
+    >
       <div
         class="relative bg-black shadow-xl ring-1 ring-border"
         :style="containerStyle"
@@ -127,6 +127,7 @@ onMounted(() => {
         <iframe
           ref="iframeRef"
           :src="blobUrl"
+          :title="`${label} Player`"
           class="absolute inset-0 border-0"
           sandbox="allow-scripts allow-same-origin"
           :style="displayStyle"

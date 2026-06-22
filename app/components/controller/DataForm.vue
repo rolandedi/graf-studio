@@ -42,7 +42,10 @@ function submit() {
 
 <template>
   <div class="space-y-3 p-3">
-    <div v-if="properties.length === 0" class="py-2 text-center text-xs text-muted-foreground">
+    <div
+      v-if="properties.length === 0"
+      class="py-2 text-center text-xs text-muted-foreground"
+    >
       Aucune donnée dynamique
     </div>
 
@@ -96,7 +99,12 @@ function submit() {
       </Select>
     </div>
 
-    <Button v-if="properties.length > 0" size="sm" class="w-full" @click="submit">
+    <Button
+      v-if="properties.length > 0"
+      size="sm"
+      class="w-full"
+      @click="submit"
+    >
       Mettre à jour
     </Button>
   </div>
