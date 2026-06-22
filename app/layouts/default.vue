@@ -4,7 +4,19 @@
       <slot />
     </main>
     <LayoutAppTabs />
+    <UiSonnerToaster
+      position="top-right"
+      :toast-options="{
+        style: {
+          background: 'var(--card)',
+          color: 'var(--foreground)',
+          border: '1px solid var(--border)',
+        },
+      }"
+    />
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { Toaster } from "vue-sonner";
+</script>
