@@ -28,13 +28,18 @@ const state = reactive<{
 // Debounced auto-save
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
+// Strip Vue reactivity for IndexedDB compatibility
+function toRaw<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 function scheduleAutoSave() {
   if (!state.current) return;
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
     if (state.current) {
       state.current.updatedAt = Date.now();
-      await saveProject(state.current);
+      await saveProject(toRaw(state.current));
     }
   }, 800);
 }
@@ -82,7 +87,7 @@ export function useProjectStore() {
   async function saveCurrent() {
     if (!state.current) return;
     state.current.updatedAt = Date.now();
-    await saveProject(state.current);
+    await saveProject(toRaw(state.current));
     await loadProjects();
   }
 

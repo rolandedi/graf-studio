@@ -386,8 +386,8 @@ export function generateWrapperHTML(
   <script type="module">
     ${componentCode}
 
-    const graphic = new Graphic();
     customElements.define("ograf-graphic", Graphic);
+    const graphic = document.createElement("ograf-graphic");
     document.body.appendChild(graphic);
 
     const defaultData = ${defaultData};

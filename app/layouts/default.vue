@@ -4,7 +4,7 @@
       <slot />
     </main>
     <LayoutAppTabs />
-    <UiSonnerToaster
+    <Toaster
       position="top-right"
       :toast-options="{
         style: {
