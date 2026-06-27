@@ -1,4 +1,4 @@
-# Ograf Builder
+# GrafStudio
 
 Constructeur de modèles graphiques TV pour OGraf, la nouvelle spécification de graphiques HTML soutenue par l'EBU - fonctionnant directement dans votre navigateur !
 

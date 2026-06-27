@@ -1,5 +1,14 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, watch, computed } from "vue";
+import { Input } from "~/components/ui/input";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import type { JSONSchema, JSONSchemaProperty } from "~/lib/ograf/types";
 
 const props = defineProps<{
@@ -41,71 +50,81 @@ function submit() {
 </script>
 
 <template>
-  <div class="space-y-3 p-3">
+  <div class="space-y-1.5 p-2">
     <div
       v-if="properties.length === 0"
-      class="py-2 text-center text-xs text-muted-foreground"
+      class="py-2 text-center text-[10px] text-[var(--text-muted)]"
     >
       Aucune donnée dynamique
     </div>
 
-    <div v-for="prop in properties" :key="prop.key" class="space-y-1">
-      <span class="text-xs font-medium text-muted-foreground">
-        {{ prop.title ?? prop.key }}
-      </span>
-
-      <!-- String -->
-      <Input
-        v-if="prop.type === 'string' && !prop.enum"
-        :model-value="String(localData[prop.key] ?? '')"
-        size="sm"
-        @update:model-value="updateField(prop.key, $event)"
-      />
-
-      <!-- Number -->
-      <Input
-        v-else-if="prop.type === 'number' || prop.type === 'integer'"
-        type="number"
-        :model-value="Number(localData[prop.key] ?? 0)"
-        size="sm"
-        @update:model-value="updateField(prop.key, Number($event))"
-      />
-
-      <!-- Boolean -->
-      <Checkbox
-        v-else-if="prop.type === 'boolean'"
-        :model-value="Boolean(localData[prop.key] ?? false)"
-        @update:model-value="updateField(prop.key, $event)"
-      />
-
-      <!-- Enum -->
-      <Select
-        v-else-if="prop.enum"
-        :model-value="String(localData[prop.key] ?? '')"
-        @update:model-value="updateField(prop.key, $event)"
+    <div
+      v-for="prop in properties"
+      :key="prop.key"
+      class="flex items-center gap-2"
+    >
+      <label
+        class="w-20 shrink-0 text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
       >
-        <SelectTrigger class="h-8 text-xs">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem
-            v-for="opt in prop.enum"
-            :key="String(opt)"
-            :value="String(opt)"
+        {{ prop.title ?? prop.key }}
+      </label>
+
+      <div class="min-w-0 flex-1">
+        <!-- String -->
+        <Input
+          v-if="prop.type === 'string' && !prop.enum"
+          :model-value="String(localData[prop.key] ?? '')"
+          class="h-6 w-full bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] rounded-[2px] px-1.5"
+          @update:model-value="(v) => updateField(prop.key, v)"
+        />
+
+        <!-- Number -->
+        <Input
+          v-else-if="prop.type === 'number' || prop.type === 'integer'"
+          type="number"
+          :model-value="Number(localData[prop.key] ?? 0)"
+          class="h-6 w-full bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] tabular-nums rounded-[2px] px-1.5"
+          @update:model-value="(v) => updateField(prop.key, Number(v))"
+        />
+
+        <!-- Boolean -->
+        <Checkbox
+          v-else-if="prop.type === 'boolean'"
+          :model-value="Boolean(localData[prop.key] ?? false)"
+          @update:model-value="(v) => updateField(prop.key, v)"
+        />
+
+        <!-- Enum -->
+        <Select
+          v-else-if="prop.enum"
+          :model-value="String(localData[prop.key] ?? '')"
+          @update:model-value="(v) => updateField(prop.key, v)"
+        >
+          <SelectTrigger
+            class="h-6 w-full bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] rounded-[2px] px-1.5"
           >
-            {{ opt }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem
+              v-for="opt in prop.enum"
+              :key="String(opt)"
+              :value="String(opt)"
+            >
+              {{ opt }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
 
-    <Button
+    <button
       v-if="properties.length > 0"
-      size="sm"
-      class="w-full"
+      type="button"
+      class="mt-1 flex h-6 w-full items-center justify-center rounded-[2px] bg-[var(--accent-blue)] text-[10px] font-semibold uppercase tracking-wider text-white hover:bg-[var(--accent-blue)]/90"
       @click="submit"
     >
       Mettre à jour
-    </Button>
+    </button>
   </div>
 </template>

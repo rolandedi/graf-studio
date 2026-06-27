@@ -17,13 +17,13 @@ const isLoaded = ref(false);
 
 const bridge = useOgrafBridge(iframeRef);
 
+const PREVIEW_MAX_W = 560;
+const PREVIEW_MAX_H = 320;
+
 const displayStyle = computed(() => {
-  // Scale to fit a reasonable preview area
-  const maxW = 600;
-  const maxH = 340;
   const scale = Math.min(
-    maxW / props.resolution.width,
-    maxH / props.resolution.height,
+    PREVIEW_MAX_W / props.resolution.width,
+    PREVIEW_MAX_H / props.resolution.height,
   );
   return {
     width: `${props.resolution.width}px`,
@@ -34,11 +34,9 @@ const displayStyle = computed(() => {
 });
 
 const containerStyle = computed(() => {
-  const maxW = 600;
-  const maxH = 340;
   const scale = Math.min(
-    maxW / props.resolution.width,
-    maxH / props.resolution.height,
+    PREVIEW_MAX_W / props.resolution.width,
+    PREVIEW_MAX_H / props.resolution.height,
   );
   return {
     width: `${props.resolution.width * scale}px`,
@@ -65,14 +63,8 @@ async function loadGraphic() {
   }
 }
 
-// Expose bridge to parent
-defineExpose({
-  bridge,
-  loadGraphic,
-  isLoaded,
-});
+defineExpose({ bridge, loadGraphic, isLoaded });
 
-// Regenerate when project changes (debounced)
 let regenTimer: ReturnType<typeof setTimeout> | null = null;
 watch(
   () => props.project,
@@ -83,7 +75,6 @@ watch(
   { deep: true },
 );
 
-// Load when ready
 watch(
   () => bridge.isReady.value,
   async (ready) => {
@@ -104,24 +95,39 @@ onMounted(() => {
 
 <template>
   <div class="flex h-full flex-col">
-    <!-- Player label -->
-    <div class="flex items-center gap-2 border-b border-border px-3 py-1.5">
+    <!-- Player label header (DaVinci style) -->
+    <div
+      class="flex h-7 shrink-0 items-center gap-2 border-b border-[var(--border-panel)] bg-[var(--bg-header)] px-2"
+    >
       <div
-        class="size-2 rounded-full"
-        :style="{ background: labelColor ?? 'var(--primary)' }"
+        class="size-2 rounded-full ring-1 ring-black/30"
+        :style="{ background: labelColor ?? 'var(--accent-blue)' }"
       />
-      <span class="text-xs font-semibold text-foreground">{{ label }}</span>
-      <Badge v-if="isLoaded" variant="secondary" class="ml-auto text-xs">
+      <span
+        class="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-primary)]"
+      >
+        {{ label }}
+      </span>
+      <span
+        v-if="isLoaded"
+        class="ml-auto rounded-[2px] bg-[var(--bg-panel-2)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+      >
         Loaded
-      </Badge>
+      </span>
+      <span
+        v-else
+        class="ml-auto rounded-[2px] bg-[var(--bg-panel-2)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-[var(--text-muted)]"
+      >
+        Loading…
+      </span>
     </div>
 
     <!-- Player iframe -->
     <div
-      class="flex flex-1 items-center justify-center overflow-hidden bg-black/40 p-3"
+      class="flex flex-1 items-center justify-center overflow-hidden bg-black/50 p-3"
     >
       <div
-        class="relative bg-black shadow-xl ring-1 ring-border"
+        class="relative bg-black shadow-xl ring-1 ring-[var(--border-panel)]"
         :style="containerStyle"
       >
         <iframe
