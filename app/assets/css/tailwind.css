@@ -45,73 +45,90 @@
 }
 
 :root {
-  --radius: 0.375rem;
-  /* GrafStudio — DaVinci Resolve inspired dark theme (forced dark) */
-  --background: oklch(0.18 0.02 270);
-  --foreground: oklch(0.92 0.005 270);
-  --card: oklch(0.22 0.02 270);
-  --card-foreground: oklch(0.92 0.005 270);
-  --popover: oklch(0.22 0.02 270);
-  --popover-foreground: oklch(0.92 0.005 270);
-  --primary: oklch(0.62 0.18 250);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.28 0.02 270);
-  --secondary-foreground: oklch(0.92 0.005 270);
-  --muted: oklch(0.26 0.015 270);
-  --muted-foreground: oklch(0.62 0.01 270);
-  --accent: oklch(0.68 0.16 70);
-  --accent-foreground: oklch(0.15 0.01 270);
-  --destructive: oklch(0.65 0.22 25);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.62 0.18 250);
-  --chart-1: oklch(0.62 0.18 250);
-  --chart-2: oklch(0.68 0.16 70);
-  --chart-3: oklch(0.6 0.2 160);
-  --chart-4: oklch(0.65 0.22 25);
-  --chart-5: oklch(0.55 0.2 300);
-  --sidebar: oklch(0.16 0.02 270);
-  --sidebar-foreground: oklch(0.92 0.005 270);
-  --sidebar-primary: oklch(0.62 0.18 250);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.28 0.02 270);
-  --sidebar-accent-foreground: oklch(0.92 0.005 270);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.62 0.18 250);
+  --radius: 2px;
+  /* GrafStudio — DaVinci Resolve dark theme (pixel-perfect) */
+  --bg-canvas: #0e0e0e;
+  --bg-panel: #1c1c1c;
+  --bg-panel-2: #232323;
+  --bg-header: #161616;
+  --bg-input: #0a0a0a;
+  --border-panel: #2a2a2a;
+  --border-subtle: #1f1f1f;
+  --text-primary: #e8e8e8;
+  --text-secondary: #a8a8a8;
+  --text-muted: #6e6e6e;
+  --accent-red: #ff3b3b;
+  --accent-orange: #f97316;
+  --accent-blue: #3b82f6;
+  --accent-record: #e53935;
+  --selection-bg: #2d3540;
+
+  /* shadcn-vue aliases — re-aliased onto Resolve palette */
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-panel);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-panel);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-orange);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-panel-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-panel-2);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-panel-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--accent-red);
+  --border: var(--border-panel);
+  --input: var(--bg-input);
+  --ring: var(--accent-blue);
+  --chart-1: var(--accent-orange);
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #ef4444;
+  --chart-5: #a855f7;
+  --sidebar: var(--bg-panel);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--accent-orange);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--bg-panel-2);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-panel);
+  --sidebar-ring: var(--accent-blue);
 }
 
 .dark {
-  --background: oklch(0.18 0.02 270);
-  --foreground: oklch(0.92 0.005 270);
-  --card: oklch(0.22 0.02 270);
-  --card-foreground: oklch(0.92 0.005 270);
-  --popover: oklch(0.22 0.02 270);
-  --popover-foreground: oklch(0.92 0.005 270);
-  --primary: oklch(0.62 0.18 250);
-  --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.28 0.02 270);
-  --secondary-foreground: oklch(0.92 0.005 270);
-  --muted: oklch(0.26 0.015 270);
-  --muted-foreground: oklch(0.62 0.01 270);
-  --accent: oklch(0.68 0.16 70);
-  --accent-foreground: oklch(0.15 0.01 270);
-  --destructive: oklch(0.65 0.22 25);
-  --border: oklch(1 0 0 / 8%);
-  --input: oklch(1 0 0 / 12%);
-  --ring: oklch(0.62 0.18 250);
-  --chart-1: oklch(0.62 0.18 250);
-  --chart-2: oklch(0.68 0.16 70);
-  --chart-3: oklch(0.6 0.2 160);
-  --chart-4: oklch(0.65 0.22 25);
-  --chart-5: oklch(0.55 0.2 300);
-  --sidebar: oklch(0.16 0.02 270);
-  --sidebar-foreground: oklch(0.92 0.005 270);
-  --sidebar-primary: oklch(0.62 0.18 250);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.28 0.02 270);
-  --sidebar-accent-foreground: oklch(0.92 0.005 270);
-  --sidebar-border: oklch(1 0 0 / 8%);
-  --sidebar-ring: oklch(0.62 0.18 250);
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-panel);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-panel);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-orange);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-panel-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-panel-2);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-panel-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--accent-red);
+  --border: var(--border-panel);
+  --input: var(--bg-input);
+  --ring: var(--accent-blue);
+  --chart-1: var(--accent-orange);
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #ef4444;
+  --chart-5: #a855f7;
+  --sidebar: var(--bg-panel);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--accent-orange);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--bg-panel-2);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-panel);
+  --sidebar-ring: var(--accent-blue);
 }
 
 @layer base {
@@ -120,5 +137,60 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Compact, dense scrollbars in the Resolve style */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-panel);
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+}
+
+@layer components {
+  /* Dense Resolve-style button override (applied on top of shadcn-vue Button) */
+  .resolve-btn {
+    @apply h-7 px-2 text-[11px] gap-1.5 rounded-[2px];
+  }
+  /* Panel header — used by LibraryPanel, InspectorSection, MediaPoolPanel */
+  .resolve-panel-header {
+    @apply h-7 px-2 flex items-center justify-between
+           bg-[var(--bg-panel)] border-b border-[var(--border-subtle)]
+           text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)];
+  }
+  /* List item (Library / MediaPool / Inspector field rows) */
+  .resolve-list-item {
+    @apply h-6 px-2 flex items-center gap-2 text-[12px] leading-tight
+           text-[var(--text-primary)] cursor-pointer
+           hover:bg-[var(--bg-panel-2)] transition-colors;
+  }
+  .resolve-list-item--active {
+    @apply bg-[var(--selection-bg)] border-l-2 border-l-[var(--accent-blue)];
+  }
+  /* Inspector section header (collapsible) */
+  .resolve-section-header {
+    @apply h-6 px-2 flex items-center justify-between
+           border-b border-[var(--border-subtle)]
+           text-[11px] font-medium text-[var(--text-primary)]
+           cursor-pointer hover:bg-[var(--bg-panel-2)];
+  }
+  /* Section dot — red when param modified */
+  .resolve-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-[var(--accent-red)] shrink-0;
+  }
+  /* Numeric label / value (tabular figures) */
+  .resolve-num {
+    @apply text-[11px] tabular-nums text-[var(--text-primary)];
   }
 }
