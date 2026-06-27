@@ -17,3 +17,4 @@
 - https://github.com/greensock/GSAP
 - https://github.com/juliangarnier/anime
 - https://github.com/motiondivision/motion
+- https://github.com/bcakmakoglu/vue-flow
