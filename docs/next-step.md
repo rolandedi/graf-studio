@@ -18,3 +18,5 @@
 - https://github.com/juliangarnier/anime
 - https://github.com/motiondivision/motion
 - https://github.com/bcakmakoglu/vue-flow
+- https://github.com/lottiefiles/dotlottie-web
+- https://github.com/theatre-js/theatre
