@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { Film, Sparkles, ListTree, Music, Info, FileText } from "@lucide/vue";
+import { Film, Sparkles, ListTree, Music } from "@lucide/vue";
 import { useUiStore, type LeftPanel } from "~/composables/useUiStore";
 import ElementTree from "./ElementTree.vue";
 import type { GraphicElement } from "~/lib/ograf/types";
@@ -37,22 +37,22 @@ const currentMeta = computed(() => panelMeta[activeLeftPanel.value]);
 </script>
 
 <template>
-  <div class="flex h-full flex-col bg-[var(--bg-panel)]">
+  <div class="flex h-full flex-col bg-(--bg-panel)">
     <!-- Top header with current panel name + icon -->
     <div
-      class="flex h-7 shrink-0 items-center gap-2 border-b border-[var(--border-panel)] px-2"
+      class="flex h-7 shrink-0 items-center gap-2 border-b border-(--border-panel) px-2"
     >
       <component
         :is="currentMeta.icon"
-        class="size-3.5 text-[var(--text-secondary)]"
+        class="size-3.5 text-(--text-secondary)"
       />
       <span
-        class="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-primary)]"
+        class="text-[11px] font-semibold uppercase tracking-wider text-(--text-primary)"
       >
         {{ currentMeta.title }}
       </span>
       <span
-        class="ml-auto text-[10px] uppercase tracking-wider text-[var(--text-muted)]"
+        class="ml-auto text-[10px] uppercase tracking-wider text-(--text-muted)"
       >
         {{ currentMeta.subtitle }}
       </span>
@@ -76,11 +76,11 @@ const currentMeta = computed(() => panelMeta[activeLeftPanel.value]);
         v-else-if="activeLeftPanel === 'effects'"
         class="flex h-full flex-col items-center justify-center gap-2 p-4 text-center"
       >
-        <Sparkles class="size-6 text-[var(--text-muted)]" />
-        <span class="text-[11px] text-[var(--text-muted)]">
+        <Sparkles class="size-6 text-(--text-muted)" />
+        <span class="text-[11px] text-(--text-muted)">
           Bibliothèque d'effets
         </span>
-        <span class="text-[10px] text-[var(--text-muted)]">
+        <span class="text-[10px] text-(--text-muted)">
           Bientôt disponible
         </span>
       </div>
@@ -93,48 +93,48 @@ const currentMeta = computed(() => panelMeta[activeLeftPanel.value]);
         <div class="space-y-2">
           <div class="space-y-0.5">
             <label
-              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              class="block text-[10px] uppercase tracking-wider text-(--text-secondary)"
             >
               Nom
             </label>
             <div
-              class="rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
+              class="rounded-[2px] border border-(--border-panel) bg-(--bg-input) px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
             >
               {{ projectName ?? "—" }}
             </div>
           </div>
           <div class="space-y-0.5">
             <label
-              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              class="block text-[10px] uppercase tracking-wider text-(--text-secondary)"
             >
               Résolution
             </label>
             <div
-              class="rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
+              class="rounded-[2px] border border-(--border-panel) bg-(--bg-input) px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
             >
               {{ projectResolution ?? "—" }}
             </div>
           </div>
           <div class="space-y-0.5">
             <label
-              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              class="block text-[10px] uppercase tracking-wider text-(--text-secondary)"
             >
               Steps
             </label>
             <div
-              class="rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
+              class="rounded-[2px] border border-(--border-panel) bg-(--bg-input) px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
             >
               {{ projectStepCount ?? 1 }}
             </div>
           </div>
           <div class="space-y-0.5">
             <label
-              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              class="block text-[10px] uppercase tracking-wider text-(--text-secondary)"
             >
               Description
             </label>
             <div
-              class="rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
+              class="rounded-[2px] border border-(--border-panel) bg-(--bg-input) px-1.5 py-1 text-[11px] text-[var(--text-primary)]"
             >
               {{ projectDescription ?? "—" }}
             </div>
@@ -147,11 +147,9 @@ const currentMeta = computed(() => panelMeta[activeLeftPanel.value]);
         v-else-if="activeLeftPanel === 'sound'"
         class="flex h-full flex-col items-center justify-center gap-2 p-4 text-center"
       >
-        <Music class="size-6 text-[var(--text-muted)]" />
-        <span class="text-[11px] text-[var(--text-muted)]">
-          Sound Library
-        </span>
-        <span class="text-[10px] text-[var(--text-muted)]">
+        <Music class="size-6 text-(--text-muted)" />
+        <span class="text-[11px] text-(--text-muted)"> Sound Library </span>
+        <span class="text-[10px] text-(--text-muted)">
           Bientôt disponible
         </span>
       </div>

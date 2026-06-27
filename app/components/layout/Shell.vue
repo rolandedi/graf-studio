@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useUiStore } from "~/composables/useUiStore";
-import TopBar from "./TopBar.vue";
 import ModuleNav from "./ModuleNav.vue";
 
 const ui = useUiStore();
@@ -8,9 +7,8 @@ const ui = useUiStore();
 
 <template>
   <div
-    class="flex h-screen w-screen flex-col overflow-hidden bg-[var(--bg-canvas)] text-[var(--text-primary)]"
+    class="flex h-screen w-screen flex-col overflow-hidden bg-(--bg-canvas) text-(--text-primary)"
   >
-    <TopBar />
     <div class="flex min-h-0 flex-1">
       <!-- Center: page content fills the whole row.
            Left/right panels are rendered inside each page (Composer/Fairlight)

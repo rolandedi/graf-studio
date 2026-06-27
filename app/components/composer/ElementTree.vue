@@ -50,10 +50,10 @@ function onDrop(event: DragEvent, targetId: string) {
   <div class="flex h-full flex-col">
     <!-- Master bin header (DaVinci MediaPool style) -->
     <div
-      class="flex h-6 items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] px-2"
+      class="flex h-6 items-center justify-between border-b border-(--border-subtle) bg-(--bg-panel) px-2"
     >
       <span
-        class="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+        class="text-[10px] font-semibold uppercase tracking-wider text-(--text-secondary)"
       >
         Master
       </span>
@@ -61,7 +61,7 @@ function onDrop(event: DragEvent, targetId: string) {
         <button
           type="button"
           title="Ajouter un texte"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
           @click="emit('add', 'text')"
         >
           <Type class="size-3" />
@@ -69,7 +69,7 @@ function onDrop(event: DragEvent, targetId: string) {
         <button
           type="button"
           title="Ajouter une forme"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
           @click="emit('add', 'shape')"
         >
           <Square class="size-3" />
@@ -80,7 +80,7 @@ function onDrop(event: DragEvent, targetId: string) {
     <div class="flex-1 overflow-y-auto">
       <div
         v-if="sortedElements.length === 0"
-        class="py-8 px-3 text-center text-[10px] text-[var(--text-muted)]"
+        class="py-8 px-3 text-center text-[10px] text-(--text-muted)"
       >
         Aucun élément.
         <br />
@@ -95,8 +95,8 @@ function onDrop(event: DragEvent, targetId: string) {
           'group flex h-6 cursor-pointer items-center gap-1.5 pl-2 pr-1 text-[12px] leading-tight',
           'transition-colors border-l-2',
           selectedId === el.id
-            ? 'bg-[var(--selection-bg)] border-l-[var(--accent-blue)] text-[var(--text-primary)]'
-            : 'border-l-transparent text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)]',
+            ? 'bg-(--selection-bg) border-l-(--accent-blue) text-(--text-primary)'
+            : 'border-l-transparent text-(--text-primary) hover:bg-(--bg-panel-2)',
         ]"
         @click="emit('select', el.id)"
         @dragstart="onDragStart($event, el.id)"
@@ -109,7 +109,7 @@ function onDrop(event: DragEvent, targetId: string) {
         <button
           type="button"
           title="Supprimer"
-          class="flex h-4 w-4 items-center justify-center rounded-[2px] text-[var(--text-muted)] opacity-0 hover:bg-[var(--accent-red)] hover:text-white group-hover:opacity-100"
+          class="flex h-4 w-4 items-center justify-center rounded-[2px] text-(--text-muted) opacity-0 hover:bg-(--accent-red) hover:text-white group-hover:opacity-100"
           @click.stop="emit('remove', el.id)"
         >
           <Trash2 class="size-2.5" />

@@ -125,24 +125,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex h-full flex-col bg-[var(--bg-canvas)]">
+  <div class="flex h-full flex-col bg-(--bg-canvas)">
     <!-- Transport bar — DaVinci Resolve style -->
     <div
-      class="flex h-7 shrink-0 items-center gap-1 border-b border-[var(--border-subtle)] bg-[var(--bg-header)] px-2"
+      class="flex h-7 shrink-0 items-center gap-1 border-b border-(--border-subtle) bg-(--bg-header) px-2"
     >
       <!-- Left: transport controls -->
       <div class="flex items-center gap-0.5">
         <button
           type="button"
           title="Skip to start"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
         >
           <SkipBack class="size-3" />
         </button>
         <button
           type="button"
           title="Step back"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
         >
           <StepBack class="size-3" />
         </button>
@@ -150,8 +150,8 @@ onMounted(() => {
           type="button"
           title="Play"
           :disabled="isPlaying"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)] disabled:opacity-40"
-          :class="!isPlaying && 'bg-[var(--bg-panel-2)]'"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-primary) hover:bg-(--bg-panel-2) disabled:opacity-40"
+          :class="!isPlaying && 'bg-(--bg-panel-2)'"
           @click="playGraphic"
         >
           <Play class="size-3" />
@@ -160,7 +160,7 @@ onMounted(() => {
           type="button"
           title="Stop"
           :disabled="!isPlaying"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)] disabled:opacity-40"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-primary) hover:bg-(--bg-panel-2) disabled:opacity-40"
           @click="stopGraphic"
         >
           <Square class="size-3" />
@@ -168,14 +168,14 @@ onMounted(() => {
         <button
           type="button"
           title="Step forward"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
         >
           <StepForward class="size-3" />
         </button>
         <button
           type="button"
           title="Skip to end"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
         >
           <SkipForward class="size-3" />
         </button>
@@ -183,9 +183,9 @@ onMounted(() => {
 
       <!-- Center: timecode -->
       <div
-        class="ml-3 flex h-5 items-center gap-1 rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-2"
+        class="ml-3 flex h-5 items-center gap-1 rounded-[2px] border border-(--border-panel) bg-(--bg-input) px-2"
       >
-        <span class="text-[10px] tabular-nums text-[var(--text-primary)]">
+        <span class="text-[10px] tabular-nums text-(--text-primary)">
           00:00:00:00
         </span>
       </div>
@@ -195,26 +195,26 @@ onMounted(() => {
         <button
           type="button"
           title="Fit"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
           @click="fitToView"
         >
           <Maximize2 class="size-3" />
         </button>
         <button
           type="button"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
           @click="zoomOut"
         >
           <ZoomOut class="size-3" />
         </button>
         <span
-          class="w-10 text-center text-[10px] tabular-nums text-[var(--text-secondary)]"
+          class="w-10 text-center text-[10px] tabular-nums text-(--text-secondary)"
         >
           {{ Math.round(zoom * 100) }}%
         </span>
         <button
           type="button"
-          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-(--text-secondary) hover:bg-(--bg-panel-2) hover:text-(--text-primary)"
           @click="zoomIn"
         >
           <ZoomIn class="size-3" />
@@ -225,7 +225,7 @@ onMounted(() => {
     <!-- Canvas area -->
     <div class="flex flex-1 items-center justify-center overflow-auto p-4">
       <div
-        class="relative bg-black shadow-2xl ring-1 ring-[var(--border-panel)]"
+        class="relative bg-black shadow-2xl ring-1 ring-(--border-panel)"
         :style="containerStyle"
       >
         <iframe
