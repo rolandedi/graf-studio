@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -46,72 +45,90 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 2px;
+  /* GrafStudio — DaVinci Resolve dark theme (pixel-perfect) */
+  --bg-canvas: #0e0e0e;
+  --bg-panel: #1c1c1c;
+  --bg-panel-2: #232323;
+  --bg-header: #161616;
+  --bg-input: #0a0a0a;
+  --border-panel: #2a2a2a;
+  --border-subtle: #1f1f1f;
+  --text-primary: #e8e8e8;
+  --text-secondary: #a8a8a8;
+  --text-muted: #6e6e6e;
+  --accent-red: #ff3b3b;
+  --accent-orange: #f97316;
+  --accent-blue: #3b82f6;
+  --accent-record: #e53935;
+  --selection-bg: #2d3540;
+
+  /* shadcn-vue aliases — re-aliased onto Resolve palette */
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-panel);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-panel);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-orange);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-panel-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-panel-2);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-panel-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--accent-red);
+  --border: var(--border-panel);
+  --input: var(--bg-input);
+  --ring: var(--accent-blue);
+  --chart-1: var(--accent-orange);
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #ef4444;
+  --chart-5: #a855f7;
+  --sidebar: var(--bg-panel);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--accent-orange);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--bg-panel-2);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-panel);
+  --sidebar-ring: var(--accent-blue);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--bg-canvas);
+  --foreground: var(--text-primary);
+  --card: var(--bg-panel);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-panel);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-orange);
+  --primary-foreground: #ffffff;
+  --secondary: var(--bg-panel-2);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-panel-2);
+  --muted-foreground: var(--text-secondary);
+  --accent: var(--bg-panel-2);
+  --accent-foreground: var(--text-primary);
+  --destructive: var(--accent-red);
+  --border: var(--border-panel);
+  --input: var(--bg-input);
+  --ring: var(--accent-blue);
+  --chart-1: var(--accent-orange);
+  --chart-2: #3b82f6;
+  --chart-3: #22c55e;
+  --chart-4: #ef4444;
+  --chart-5: #a855f7;
+  --sidebar: var(--bg-panel);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--accent-orange);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--bg-panel-2);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-panel);
+  --sidebar-ring: var(--accent-blue);
 }
 
 @layer base {
@@ -120,5 +137,60 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  /* Compact, dense scrollbars in the Resolve style */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-panel);
+    border-radius: 0;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+}
+
+@layer components {
+  /* Dense Resolve-style button override (applied on top of shadcn-vue Button) */
+  .resolve-btn {
+    @apply h-7 px-2 text-[11px] gap-1.5 rounded-[2px];
+  }
+  /* Panel header — used by LibraryPanel, InspectorSection, MediaPoolPanel */
+  .resolve-panel-header {
+    @apply h-7 px-2 flex items-center justify-between
+           bg-[var(--bg-panel)] border-b border-[var(--border-subtle)]
+           text-[11px] font-semibold uppercase tracking-wide text-[var(--text-secondary)];
+  }
+  /* List item (Library / MediaPool / Inspector field rows) */
+  .resolve-list-item {
+    @apply h-6 px-2 flex items-center gap-2 text-[12px] leading-tight
+           text-[var(--text-primary)] cursor-pointer
+           hover:bg-[var(--bg-panel-2)] transition-colors;
+  }
+  .resolve-list-item--active {
+    @apply bg-[var(--selection-bg)] border-l-2 border-l-[var(--accent-blue)];
+  }
+  /* Inspector section header (collapsible) */
+  .resolve-section-header {
+    @apply h-6 px-2 flex items-center justify-between
+           border-b border-[var(--border-subtle)]
+           text-[11px] font-medium text-[var(--text-primary)]
+           cursor-pointer hover:bg-[var(--bg-panel-2)];
+  }
+  /* Section dot — red when param modified */
+  .resolve-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-[var(--accent-red)] shrink-0;
+  }
+  /* Numeric label / value (tabular figures) */
+  .resolve-num {
+    @apply text-[11px] tabular-nums text-[var(--text-primary)];
   }
 }

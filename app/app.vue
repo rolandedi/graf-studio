@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout>
+  <NuxtLayout name="shell">
     <NuxtPage />
   </NuxtLayout>
 </template>
@@ -7,7 +7,10 @@
 <script setup lang="ts">
 useHead({
   titleTemplate: (titleChunk) => {
-    return titleChunk ? `${titleChunk} - App` : "App";
+    return titleChunk ? `${titleChunk} - GrafStudio` : "GrafStudio";
+  },
+  htmlAttrs: {
+    class: "dark",
   },
 });
 </script>
