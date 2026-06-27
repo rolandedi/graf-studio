@@ -1,10 +1,22 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { computed } from "vue";
+import { Input } from "~/components/ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import type {
   GraphicElement,
   TextProperties,
   ShapeProperties,
 } from "~/lib/ograf/types";
+import InspectorTabs from "./InspectorTabs.vue";
+import InspectorSection from "./InspectorSection.vue";
+import InspectorField from "./InspectorField.vue";
 
 const props = defineProps<{
   element: GraphicElement | null;
@@ -23,14 +35,14 @@ function updateProp(key: keyof GraphicElement, value: unknown) {
 
 function updateTextProp(key: keyof TextProperties, value: unknown) {
   if (!el.value || el.value.type !== "text") return;
-  const props = { ...(el.value.properties as TextProperties), [key]: value };
-  emit("update", el.value.id, { properties: props });
+  const next = { ...(el.value.properties as TextProperties), [key]: value };
+  emit("update", el.value.id, { properties: next });
 }
 
 function updateShapeProp(key: keyof ShapeProperties, value: unknown) {
   if (!el.value || el.value.type !== "shape") return;
-  const props = { ...(el.value.properties as ShapeProperties), [key]: value };
-  emit("update", el.value.id, { properties: props });
+  const next = { ...(el.value.properties as ShapeProperties), [key]: value };
+  emit("update", el.value.id, { properties: next });
 }
 
 const textProps = computed(() => {
@@ -46,278 +58,348 @@ const shapeProps = computed(() => {
 
 <template>
   <div class="flex h-full flex-col">
-    <div
-      class="border-b border-border px-3 py-2 text-xs font-semibold text-foreground"
-    >
-      Propriétés
+    <InspectorTabs />
+
+    <div v-if="!el" class="flex flex-1 items-center justify-center p-4">
+      <span class="text-[11px] text-[var(--text-muted)]">
+        Aucun élément sélectionné
+      </span>
     </div>
 
-    <ScrollArea class="flex-1">
-      <div v-if="!el" class="py-8 text-center text-xs text-muted-foreground">
-        Sélectionnez un élément
+    <div v-else class="flex-1 overflow-y-auto">
+      <!-- Inspector header: element name + type badge -->
+      <div
+        class="flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-panel)] px-2 py-1.5"
+      >
+        <Input
+          :model-value="el.name"
+          class="h-6 w-full bg-transparent border-transparent text-[12px] font-medium text-[var(--text-primary)] focus-visible:bg-[var(--bg-input)] focus-visible:border-[var(--border-panel)] rounded-[2px]"
+          @update:model-value="(v) => updateProp('name', v)"
+        />
+        <span
+          class="ml-2 shrink-0 rounded-[2px] bg-[var(--bg-panel-2)] px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-[var(--text-secondary)]"
+        >
+          {{ el.type }}
+        </span>
       </div>
 
-      <div v-else class="space-y-4 p-3">
-        <!-- Common properties -->
-        <div class="space-y-2">
-          <span class="text-xs font-medium text-muted-foreground">Nom</span>
-          <Input
-            :model-value="el.name"
-            size="sm"
-            @update:model-value="updateProp('name', $event)"
+      <!-- TRANSFORM -->
+      <InspectorSection id="transform" title="Transform" default-open>
+        <div class="grid grid-cols-2 gap-1.5">
+          <InspectorField
+            label="Position X"
+            type="number"
+            :model-value="el.x"
+            width="half"
+            @update:model-value="(v) => updateProp('x', v)"
+          />
+          <InspectorField
+            label="Position Y"
+            type="number"
+            :model-value="el.y"
+            width="half"
+            @update:model-value="(v) => updateProp('y', v)"
+          />
+          <InspectorField
+            label="Zoom X"
+            type="number"
+            step="0.1"
+            :model-value="1"
+            width="half"
+          />
+          <InspectorField
+            label="Zoom Y"
+            type="number"
+            step="0.1"
+            :model-value="1"
+            width="half"
+          />
+          <InspectorField
+            label="Rotation"
+            type="number"
+            :model-value="el.rotation"
+            width="half"
+            @update:model-value="(v) => updateProp('rotation', v)"
+          />
+          <InspectorField
+            label="Anchor"
+            type="number"
+            :model-value="0"
+            width="half"
           />
         </div>
+      </InspectorSection>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground">X</span>
-            <Input
-              type="number"
-              :model-value="el.x"
-              size="sm"
-              @update:model-value="updateProp('x', Number($event))"
-            />
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground">Y</span>
-            <Input
-              type="number"
-              :model-value="el.y"
-              size="sm"
-              @update:model-value="updateProp('y', Number($event))"
-            />
-          </div>
+      <!-- CROPPING -->
+      <InspectorSection id="cropping" title="Cropping">
+        <div class="grid grid-cols-2 gap-1.5">
+          <InspectorField
+            label="Left"
+            type="number"
+            :model-value="0"
+            width="half"
+          />
+          <InspectorField
+            label="Right"
+            type="number"
+            :model-value="0"
+            width="half"
+          />
+          <InspectorField
+            label="Top"
+            type="number"
+            :model-value="0"
+            width="half"
+          />
+          <InspectorField
+            label="Bottom"
+            type="number"
+            :model-value="0"
+            width="half"
+          />
         </div>
+      </InspectorSection>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Largeur</span
+      <!-- COMPOSITE -->
+      <InspectorSection id="composite" title="Composite" default-open>
+        <div class="grid grid-cols-2 gap-1.5">
+          <InspectorField
+            label="Opacity"
+            type="number"
+            :min="0"
+            :max="1"
+            :step="0.1"
+            :model-value="el.opacity"
+            width="half"
+            @update:model-value="(v) => updateProp('opacity', v)"
+          />
+          <div class="space-y-0.5">
+            <label
+              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
             >
-            <Input
-              type="number"
-              :model-value="el.width"
-              size="sm"
-              @update:model-value="updateProp('width', Number($event))"
-            />
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Hauteur</span
-            >
-            <Input
-              type="number"
-              :model-value="el.height"
-              size="sm"
-              @update:model-value="updateProp('height', Number($event))"
-            />
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Rotation (°)</span
-            >
-            <Input
-              type="number"
-              :model-value="el.rotation"
-              size="sm"
-              @update:model-value="updateProp('rotation', Number($event))"
-            />
-          </div>
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Opacité</span
-            >
-            <Input
-              type="number"
-              min="0"
-              max="1"
-              step="0.1"
-              :model-value="el.opacity"
-              size="sm"
-              @update:model-value="updateProp('opacity', Number($event))"
-            />
-          </div>
-        </div>
-
-        <!-- Text-specific properties -->
-        <template v-if="textProps">
-          <Separator />
-          <div class="space-y-2">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Contenu</span
-            >
-            <Textarea
-              :model-value="textProps.content"
-              size="sm"
-              @update:model-value="updateTextProp('content', $event)"
-            />
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div class="space-y-1">
-              <span class="text-xs font-medium text-muted-foreground"
-                >Taille police</span
+              Mode
+            </label>
+            <Select :model-value="'normal'">
+              <SelectTrigger
+                class="h-6 w-full px-1.5 text-[11px] bg-[var(--bg-input)] border-[var(--border-panel)] rounded-[2px]"
               >
-              <Input
-                type="number"
-                :model-value="textProps.fontSize"
-                size="sm"
-                @update:model-value="updateTextProp('fontSize', Number($event))"
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="multiply">Multiply</SelectItem>
+                <SelectItem value="screen">Screen</SelectItem>
+                <SelectItem value="overlay">Overlay</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </InspectorSection>
+
+      <!-- SPEED CHANGE -->
+      <InspectorSection id="speed" title="Speed Change">
+        <div class="grid grid-cols-2 gap-1.5">
+          <InspectorField
+            label="Speed"
+            type="number"
+            :model-value="100"
+            width="half"
+          />
+          <InspectorField
+            label="Pitch"
+            type="number"
+            :model-value="0"
+            width="half"
+          />
+        </div>
+      </InspectorSection>
+
+      <!-- TYPE-SPECIFIC SECTIONS -->
+      <template v-if="textProps">
+        <InspectorSection id="text" title="Text" default-open>
+          <div class="space-y-1.5">
+            <div class="space-y-0.5">
+              <label
+                class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              >
+                Contenu
+              </label>
+              <Textarea
+                :model-value="textProps.content"
+                :rows="3"
+                class="w-full bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] rounded-[2px]"
+                @update:model-value="(v) => updateTextProp('content', v)"
               />
             </div>
-            <div class="space-y-1">
-              <span class="text-xs font-medium text-muted-foreground"
-                >Graisse</span
+            <div class="grid grid-cols-2 gap-1.5">
+              <InspectorField
+                label="Taille"
+                type="number"
+                :model-value="textProps.fontSize"
+                width="half"
+                @update:model-value="(v) => updateTextProp('fontSize', v)"
+              />
+              <div class="space-y-0.5">
+                <label
+                  class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+                >
+                  Graisse
+                </label>
+                <Select
+                  :model-value="textProps.fontWeight"
+                  @update:model-value="(v) => updateTextProp('fontWeight', v)"
+                >
+                  <SelectTrigger
+                    class="h-6 w-full px-1.5 text-[11px] bg-[var(--bg-input)] border-[var(--border-panel)] rounded-[2px]"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="400">Normal</SelectItem>
+                    <SelectItem value="500">Medium</SelectItem>
+                    <SelectItem value="600">Semibold</SelectItem>
+                    <SelectItem value="700">Bold</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div class="space-y-0.5">
+              <label
+                class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
               >
+                Couleur
+              </label>
+              <div class="flex gap-1">
+                <input
+                  type="color"
+                  :value="textProps.color"
+                  class="h-6 w-8 cursor-pointer rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] p-0"
+                  @input="
+                    (e) =>
+                      updateTextProp(
+                        'color',
+                        (e.target as HTMLInputElement).value,
+                      )
+                  "
+                />
+                <Input
+                  :model-value="textProps.color"
+                  class="h-6 flex-1 bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] rounded-[2px] px-1.5"
+                  @update:model-value="(v) => updateTextProp('color', v)"
+                />
+              </div>
+            </div>
+            <div class="space-y-0.5">
+              <label
+                class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              >
+                Alignement
+              </label>
               <Select
-                :model-value="textProps.fontWeight"
-                @update:model-value="updateTextProp('fontWeight', $event)"
+                :model-value="textProps.textAlign"
+                @update:model-value="(v) => updateTextProp('textAlign', v)"
               >
-                <SelectTrigger class="h-8 text-xs">
+                <SelectTrigger
+                  class="h-6 w-full px-1.5 text-[11px] bg-[var(--bg-input)] border-[var(--border-panel)] rounded-[2px]"
+                >
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="400">Normal</SelectItem>
-                  <SelectItem value="500">Medium</SelectItem>
-                  <SelectItem value="600">Semibold</SelectItem>
-                  <SelectItem value="700">Bold</SelectItem>
+                  <SelectItem value="left">Gauche</SelectItem>
+                  <SelectItem value="center">Centre</SelectItem>
+                  <SelectItem value="right">Droite</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
+        </InspectorSection>
+      </template>
 
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Couleur</span
-            >
-            <div class="flex gap-2">
-              <Input
-                type="color"
-                :model-value="textProps.color"
-                class="h-8 w-12 p-1"
-                @update:model-value="updateTextProp('color', $event)"
-              />
-              <Input
-                :model-value="textProps.color"
-                size="sm"
-                @update:model-value="updateTextProp('color', $event)"
-              />
-            </div>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Alignement</span
-            >
-            <Select
-              :model-value="textProps.textAlign"
-              @update:model-value="updateTextProp('textAlign', $event)"
-            >
-              <SelectTrigger class="h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="left">Gauche</SelectItem>
-                <SelectItem value="center">Centre</SelectItem>
-                <SelectItem value="right">Droite</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </template>
-
-        <!-- Shape-specific properties -->
-        <template v-if="shapeProps">
-          <Separator />
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Type de forme</span
-            >
-            <Select
-              :model-value="shapeProps.shapeType"
-              @update:model-value="updateShapeProp('shapeType', $event)"
-            >
-              <SelectTrigger class="h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="rectangle">Rectangle</SelectItem>
-                <SelectItem value="rounded-rect">Rectangle arrondi</SelectItem>
-                <SelectItem value="circle">Cercle</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Couleur de fond</span
-            >
-            <div class="flex gap-2">
-              <Input
-                type="color"
-                :model-value="shapeProps.fillColor"
-                class="h-8 w-12 p-1"
-                @update:model-value="updateShapeProp('fillColor', $event)"
-              />
-              <Input
-                :model-value="shapeProps.fillColor"
-                size="sm"
-                @update:model-value="updateShapeProp('fillColor', $event)"
-              />
-            </div>
-          </div>
-
-          <div class="space-y-1">
-            <span class="text-xs font-medium text-muted-foreground"
-              >Couleur de bordure</span
-            >
-            <div class="flex gap-2">
-              <Input
-                type="color"
-                :model-value="shapeProps.strokeColor"
-                class="h-8 w-12 p-1"
-                @update:model-value="updateShapeProp('strokeColor', $event)"
-              />
-              <Input
-                :model-value="shapeProps.strokeColor"
-                size="sm"
-                @update:model-value="updateShapeProp('strokeColor', $event)"
-              />
-            </div>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <div class="space-y-1">
-              <span class="text-xs font-medium text-muted-foreground"
-                >Épaisseur bordure</span
+      <template v-if="shapeProps">
+        <InspectorSection id="shape" title="Shape" default-open>
+          <div class="space-y-1.5">
+            <div class="space-y-0.5">
+              <label
+                class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
               >
-              <Input
+                Type
+              </label>
+              <Select
+                :model-value="shapeProps.shapeType"
+                @update:model-value="(v) => updateShapeProp('shapeType', v)"
+              >
+                <SelectTrigger
+                  class="h-6 w-full px-1.5 text-[11px] bg-[var(--bg-input)] border-[var(--border-panel)] rounded-[2px]"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="rectangle">Rectangle</SelectItem>
+                  <SelectItem value="rounded-rect">Coins arrondis</SelectItem>
+                  <SelectItem value="circle">Cercle</SelectItem>
+                  <SelectItem value="line">Ligne</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div class="space-y-0.5">
+              <label
+                class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
+              >
+                Remplissage
+              </label>
+              <div class="flex gap-1">
+                <input
+                  type="color"
+                  :value="shapeProps.fillColor"
+                  class="h-6 w-8 cursor-pointer rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] p-0"
+                  @input="
+                    (e) =>
+                      updateShapeProp(
+                        'fillColor',
+                        (e.target as HTMLInputElement).value,
+                      )
+                  "
+                />
+                <Input
+                  :model-value="shapeProps.fillColor"
+                  class="h-6 flex-1 bg-[var(--bg-input)] border-[var(--border-panel)] text-[11px] rounded-[2px] px-1.5"
+                  @update:model-value="(v) => updateShapeProp('fillColor', v)"
+                />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5">
+              <InspectorField
+                label="Largeur"
+                type="number"
+                :model-value="el.width"
+                width="half"
+                @update:model-value="(v) => updateProp('width', v)"
+              />
+              <InspectorField
+                label="Hauteur"
+                type="number"
+                :model-value="el.height"
+                width="half"
+                @update:model-value="(v) => updateProp('height', v)"
+              />
+              <InspectorField
+                label="Bordure"
                 type="number"
                 :model-value="shapeProps.strokeWidth"
-                size="sm"
-                @update:model-value="
-                  updateShapeProp('strokeWidth', Number($event))
-                "
+                width="half"
+                @update:model-value="(v) => updateShapeProp('strokeWidth', v)"
               />
-            </div>
-            <div class="space-y-1">
-              <span class="text-xs font-medium text-muted-foreground"
-                >Rayon coins</span
-              >
-              <Input
+              <InspectorField
+                label="Radius"
                 type="number"
                 :model-value="shapeProps.borderRadius"
-                size="sm"
-                @update:model-value="
-                  updateShapeProp('borderRadius', Number($event))
-                "
+                width="half"
+                @update:model-value="(v) => updateShapeProp('borderRadius', v)"
               />
             </div>
           </div>
-        </template>
-      </div>
-    </ScrollArea>
+        </InspectorSection>
+      </template>
+    </div>
   </div>
 </template>

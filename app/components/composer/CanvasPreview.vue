@@ -1,6 +1,16 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import { ref, watch, onUnmounted, computed } from "vue";
-import { Play, Square, ZoomIn, ZoomOut } from "@lucide/vue";
+import {
+  Play,
+  Square,
+  ZoomIn,
+  ZoomOut,
+  SkipBack,
+  SkipForward,
+  StepBack,
+  StepForward,
+  Maximize2,
+} from "@lucide/vue";
 import { useOgrafBridge } from "~/composables/useOgrafBridge";
 import { createGraphicBlobURL } from "~/lib/ograf/webcomponent-generator";
 import type { OgrafProject } from "~/lib/ograf/types";
@@ -80,7 +90,10 @@ function zoomOut() {
   zoom.value = Math.max(zoom.value - 0.1, 0.1);
 }
 
-// Regenerate when project changes (debounced)
+function fitToView() {
+  zoom.value = 1;
+}
+
 let regenTimer: ReturnType<typeof setTimeout> | null = null;
 watch(
   () => props.project,
@@ -93,7 +106,6 @@ watch(
   { deep: true },
 );
 
-// Load graphic when blob URL changes and iframe is ready
 watch(
   () => bridge.isReady.value,
   async (ready) => {
@@ -107,53 +119,113 @@ onUnmounted(() => {
   if (blobUrl.value) URL.revokeObjectURL(blobUrl.value);
 });
 
-// Initial generation
 onMounted(() => {
   regenerate();
 });
 </script>
 
 <template>
-  <div class="flex h-full flex-col bg-background/50">
-    <!-- Canvas toolbar -->
+  <div class="flex h-full flex-col bg-[var(--bg-canvas)]">
+    <!-- Transport bar — DaVinci Resolve style -->
     <div
-      class="flex items-center justify-between border-b border-border px-3 py-1.5"
+      class="flex h-7 shrink-0 items-center gap-1 border-b border-[var(--border-subtle)] bg-[var(--bg-header)] px-2"
     >
-      <div class="flex items-center gap-2">
-        <Button
-          variant="ghost"
-          size="sm"
+      <!-- Left: transport controls -->
+      <div class="flex items-center gap-0.5">
+        <button
+          type="button"
+          title="Skip to start"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+        >
+          <SkipBack class="size-3" />
+        </button>
+        <button
+          type="button"
+          title="Step back"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+        >
+          <StepBack class="size-3" />
+        </button>
+        <button
+          type="button"
+          title="Play"
           :disabled="isPlaying"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)] disabled:opacity-40"
+          :class="!isPlaying && 'bg-[var(--bg-panel-2)]'"
           @click="playGraphic"
         >
-          <Play class="size-3.5" />
-          Play
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
+          <Play class="size-3" />
+        </button>
+        <button
+          type="button"
+          title="Stop"
           :disabled="!isPlaying"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)] disabled:opacity-40"
           @click="stopGraphic"
         >
-          <Square class="size-3.5" />
-          Stop
-        </Button>
+          <Square class="size-3" />
+        </button>
+        <button
+          type="button"
+          title="Step forward"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+        >
+          <StepForward class="size-3" />
+        </button>
+        <button
+          type="button"
+          title="Skip to end"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+        >
+          <SkipForward class="size-3" />
+        </button>
       </div>
-      <div class="flex items-center gap-1 text-xs text-muted-foreground">
-        <Button variant="ghost" size="sm" @click="zoomOut">
-          <ZoomOut class="size-3.5" />
-        </Button>
-        <span class="w-12 text-center">{{ Math.round(zoom * 100) }}%</span>
-        <Button variant="ghost" size="sm" @click="zoomIn">
-          <ZoomIn class="size-3.5" />
-        </Button>
+
+      <!-- Center: timecode -->
+      <div
+        class="ml-3 flex h-5 items-center gap-1 rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-2"
+      >
+        <span class="text-[10px] tabular-nums text-[var(--text-primary)]">
+          00:00:00:00
+        </span>
+      </div>
+
+      <!-- Right: zoom -->
+      <div class="ml-auto flex items-center gap-0.5">
+        <button
+          type="button"
+          title="Fit"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          @click="fitToView"
+        >
+          <Maximize2 class="size-3" />
+        </button>
+        <button
+          type="button"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          @click="zoomOut"
+        >
+          <ZoomOut class="size-3" />
+        </button>
+        <span
+          class="w-10 text-center text-[10px] tabular-nums text-[var(--text-secondary)]"
+        >
+          {{ Math.round(zoom * 100) }}%
+        </span>
+        <button
+          type="button"
+          class="flex h-5 w-5 items-center justify-center rounded-[2px] text-[var(--text-secondary)] hover:bg-[var(--bg-panel-2)] hover:text-[var(--text-primary)]"
+          @click="zoomIn"
+        >
+          <ZoomIn class="size-3" />
+        </button>
       </div>
     </div>
 
     <!-- Canvas area -->
     <div class="flex flex-1 items-center justify-center overflow-auto p-4">
       <div
-        class="relative bg-black shadow-2xl ring-1 ring-border"
+        class="relative bg-black shadow-2xl ring-1 ring-[var(--border-panel)]"
         :style="containerStyle"
       >
         <iframe

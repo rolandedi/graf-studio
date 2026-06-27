@@ -22,7 +22,13 @@ const modules: ModuleDef[] = [
   { id: "media", label: "Media", to: "/media", icon: Film, enabled: false },
   { id: "cut", label: "Cut", to: "/cut", icon: Scissors, enabled: false },
   { id: "edit", label: "Edit", to: "/edit", icon: Edit3, enabled: true },
-  { id: "fusion", label: "Fusion", to: "/fusion", icon: Sparkles, enabled: false },
+  {
+    id: "fusion",
+    label: "Fusion",
+    to: "/fusion",
+    icon: Sparkles,
+    enabled: false,
+  },
   { id: "color", label: "Color", to: "/color", icon: Palette, enabled: false },
   {
     id: "fairlight",
@@ -43,8 +49,11 @@ const modules: ModuleDef[] = [
 const route = useRoute();
 
 function isActive(to: string): boolean {
-  return route.path === to || (to === "/edit" && route.path === "/composer") ||
-    (to === "/fairlight" && route.path === "/controller");
+  return (
+    route.path === to ||
+    (to === "/edit" && route.path === "/composer") ||
+    (to === "/fairlight" && route.path === "/controller")
+  );
 }
 </script>
 

@@ -13,12 +13,8 @@ import { useUiStore, type LeftPanel } from "~/composables/useUiStore";
 import SidebarTab from "./SidebarTab.vue";
 
 const ui = useUiStore();
-const {
-  activeLeftPanel,
-  rightPanelVisible,
-  setLeftPanel,
-  toggleRightPanel,
-} = ui;
+const { activeLeftPanel, rightPanelVisible, setLeftPanel, toggleRightPanel } =
+  ui;
 
 const leftItems: {
   id: LeftPanel;

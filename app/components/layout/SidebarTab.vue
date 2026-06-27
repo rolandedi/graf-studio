@@ -35,9 +35,10 @@ function onClick() {
         'flex h-9 items-center gap-1.5 px-2.5 text-[11px] font-medium',
         'transition-colors select-none',
         'border-b-2 border-transparent',
-        active &&
-          'text-[var(--accent-orange)] border-b-[var(--accent-orange)]',
-        !active && !disabled && 'text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)]',
+        active && 'text-[var(--accent-orange)] border-b-[var(--accent-orange)]',
+        !active &&
+          !disabled &&
+          'text-[var(--text-primary)] hover:bg-[var(--bg-panel-2)]',
         disabled && 'text-[var(--text-muted)] opacity-60 cursor-not-allowed',
       )
     "

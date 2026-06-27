@@ -182,11 +182,7 @@ async function loadProject(id: string) {
           @goto="previewGoto"
         />
         <div class="border-t border-[var(--border-panel)]">
-          <div
-            class="resolve-panel-header"
-          >
-            Données Preview
-          </div>
+          <div class="resolve-panel-header">Données Preview</div>
           <ControllerDataForm
             :schema="project.schema"
             v-model="previewData"
@@ -213,11 +209,7 @@ async function loadProject(id: string) {
           @goto="programGoto"
         />
         <div class="border-t border-[var(--border-panel)]">
-          <div
-            class="resolve-panel-header"
-          >
-            Données Program
-          </div>
+          <div class="resolve-panel-header">Données Program</div>
           <ControllerDataForm
             :schema="project.schema"
             v-model="programData"

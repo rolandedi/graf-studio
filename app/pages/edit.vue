@@ -6,10 +6,12 @@ import { toast } from "vue-sonner";
 import type { KeyframeTrack, Keyframe } from "~/lib/ograf/types";
 import { addKeyframe, removeKeyframe } from "~/composables/useKeyframeEngine";
 import { downloadProjectZip, exportProjectJSON } from "~/lib/ograf/export";
+import { useUiStore } from "~/composables/useUiStore";
 
 useHead({ title: "Edit" });
 
 const store = useProjectStore();
+const { rightPanelVisible } = useUiStore();
 
 const project = computed(() => store.currentProject.value);
 const selectedElement = computed(() => store.selectedElement.value);
@@ -126,9 +128,7 @@ function handleAddTrack(elementId: string, property: string) {
       class="flex items-center justify-between border-b border-[var(--border-panel)] bg-[var(--bg-header)] px-3 py-1.5"
     >
       <div class="flex items-center gap-3">
-        <h1 class="text-sm font-semibold text-[var(--text-primary)]">
-          Edit
-        </h1>
+        <h1 class="text-sm font-semibold text-[var(--text-primary)]">Edit</h1>
         <Badge variant="secondary" class="text-[10px]">Lower Third</Badge>
         <span v-if="project" class="text-xs text-[var(--text-secondary)]">
           {{ project.name }}
@@ -156,11 +156,15 @@ function handleAddTrack(elementId: string, property: string) {
 
     <!-- Main 3-zone layout -->
     <div v-if="project" class="flex flex-1 overflow-hidden">
-      <!-- Left: Element Tree -->
-      <div class="w-56 shrink-0 border-r border-[var(--border-panel)]">
-        <ComposerElementTree
+      <!-- Left: Media Pool (or Effects/Index/Sound per TopBar) -->
+      <div class="w-60 shrink-0 border-r border-[var(--border-panel)]">
+        <ComposerMediaPoolPanel
           :elements="project.elements"
-          :selected-id="store.state.selectedElementId"
+          :selected-element-id="store.state.selectedElementId"
+          :project-name="project.name"
+          :project-resolution="`${project.resolution.width}×${project.resolution.height} (${project.resolution.label})`"
+          :project-step-count="project.stepCount"
+          :project-description="project.description"
           @select="store.selectElement"
           @add="store.addElement"
           @remove="store.removeElement"
@@ -173,8 +177,11 @@ function handleAddTrack(elementId: string, property: string) {
         <ComposerCanvasPreview :project="project" />
       </div>
 
-      <!-- Right: Properties Panel -->
-      <div class="w-64 shrink-0 border-l border-[var(--border-panel)]">
+      <!-- Right: Inspector (toggleable via TopBar) -->
+      <div
+        v-if="rightPanelVisible"
+        class="w-72 shrink-0 border-l border-[var(--border-panel)]"
+      >
         <ComposerPropertiesPanel
           :element="selectedElement"
           @update="store.updateElement"
