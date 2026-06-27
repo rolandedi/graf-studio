@@ -273,7 +273,9 @@ const rulerTicks = computed(() => {
             class="relative h-7 border-b border-[var(--border-subtle)] bg-[var(--bg-canvas)]"
             @click="
               (e) => {
-                const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+                const rect = (
+                  e.currentTarget as HTMLElement
+                ).getBoundingClientRect();
                 const percent = ((e.clientX - rect.left) / rect.width) * 100;
                 newTime = percentToTime(percent);
               }

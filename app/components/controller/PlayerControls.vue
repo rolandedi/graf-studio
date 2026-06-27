@@ -77,13 +77,17 @@ function gotoStep(step: number) {
 
     <!-- Step indicator (right) -->
     <div class="ml-auto flex items-center gap-2">
-      <span class="text-[10px] uppercase tracking-wider text-[var(--text-muted)]">
+      <span
+        class="text-[10px] uppercase tracking-wider text-[var(--text-muted)]"
+      >
         Step
       </span>
       <div
         class="flex h-5 items-center gap-px rounded-[2px] border border-[var(--border-panel)] bg-[var(--bg-input)] px-1.5"
       >
-        <span class="text-[11px] font-medium tabular-nums text-[var(--text-primary)]">
+        <span
+          class="text-[11px] font-medium tabular-nums text-[var(--text-primary)]"
+        >
           {{ currentStep ?? "—" }}
         </span>
       </div>
