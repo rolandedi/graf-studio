@@ -10,13 +10,17 @@ export function interpolateValue(
   if (keyframes.length === 0) return 0;
   const sorted = [...keyframes].sort((a, b) => a.time - b.time);
 
-  if (time <= sorted[0].time) return sorted[0].value;
-  if (time >= sorted[sorted.length - 1].time)
-    return sorted[sorted.length - 1].value;
+  const first = sorted[0];
+  const last = sorted[sorted.length - 1];
+  if (!first || !last) return 0;
+
+  if (time <= first.time) return first.value;
+  if (time >= last.time) return last.value;
 
   for (let i = 0; i < sorted.length - 1; i++) {
     const kf1 = sorted[i];
     const kf2 = sorted[i + 1];
+    if (!kf1 || !kf2) continue;
     if (time >= kf1.time && time <= kf2.time) {
       const t = (time - kf1.time) / (kf2.time - kf1.time);
       const eased = applyEasing(t, kf1.easing, kf1.cubicBezier);
@@ -30,7 +34,7 @@ export function interpolateValue(
     }
   }
 
-  return sorted[sorted.length - 1].value;
+  return last.value;
 }
 
 function applyEasing(

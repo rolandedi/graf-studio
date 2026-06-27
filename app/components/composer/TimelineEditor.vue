@@ -23,7 +23,7 @@ const viewDuration = computed(() => Math.max(totalDuration.value, 1000)); // min
 
 // Filter tracks for the selected element
 const visibleTracks = computed(() =>
-  props.tracks.filter((t) => t.selectedElementId === props.selectedElementId),
+  props.tracks.filter((t) => t.elementId === props.selectedElementId),
 );
 
 const animatableProperties = [

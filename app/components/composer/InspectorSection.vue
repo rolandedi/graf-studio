@@ -15,13 +15,13 @@ const { expandedSections, toggleSection } = useUiStore();
 // Default open for sections marked defaultOpen (and not yet seen)
 if (
   props.defaultOpen &&
-  !expandedSections.has(props.id) &&
-  expandedSections.size === 0
+  !expandedSections.value.has(props.id) &&
+  expandedSections.value.size === 0
 ) {
-  expandedSections.add(props.id);
+  expandedSections.value.add(props.id);
 }
 
-const isOpen = computed(() => expandedSections.has(props.id));
+const isOpen = computed(() => expandedSections.value.has(props.id));
 </script>
 
 <template>

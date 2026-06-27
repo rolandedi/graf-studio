@@ -100,7 +100,7 @@ export function useOgrafBridge(iframeRef: Ref<HTMLIFrameElement | null>) {
 
   function send(
     type: CommandType,
-    params: Record<string, unknown> = {},
+    params: object = {},
     timeout = DEFAULT_TIMEOUT,
   ): Promise<BridgeResponse> {
     return new Promise((resolve, reject) => {
@@ -111,7 +111,11 @@ export function useOgrafBridge(iframeRef: Ref<HTMLIFrameElement | null>) {
       }
 
       const requestId = generateRequestId();
-      const message: BridgeMessage = { type, requestId, ...params };
+      const message: BridgeMessage = {
+        type,
+        requestId,
+        ...(params as Record<string, unknown>),
+      };
 
       const timer = setTimeout(() => {
         pendingRequests.delete(requestId);

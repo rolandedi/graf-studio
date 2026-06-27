@@ -4,6 +4,15 @@ import type {
   KeyframeTrack,
   Keyframe,
 } from "./types";
+import { interpolateValue } from "../../composables/useKeyframeEngine";
+
+type WAAPIKeyframe = Record<string, unknown> & {
+  offset?: number;
+  easing?: string;
+};
+
+const TRANSFORM_PROPERTIES = ["x", "y", "rotation"] as const;
+type TransformProperty = (typeof TRANSFORM_PROPERTIES)[number];
 
 /**
  * Converts an easing type to a CSS cubic-bezier or easing string
@@ -31,23 +40,6 @@ function easingToCss(keyframe: Keyframe): string {
 }
 
 /**
- * Builds a WAAPI keyframe array from a KeyframeTrack for a given CSS property.
- */
-function buildWAAPIKeyframes(
-  track: KeyframeTrack,
-  cssProperty: string,
-): Keyframe[] | null {
-  if (track.keyframes.length === 0) return null;
-
-  const sorted = [...track.keyframes].sort((a, b) => a.time - b.time);
-  return sorted.map((kf) => ({
-    [cssProperty]: kf.value,
-    offset: kf.time / 1000, // Convert ms to seconds for offset (0-1)
-    easing: easingToCss(kf),
-  })) as Keyframe[];
-}
-
-/**
  * Maps a GrafStudio property name to a CSS property.
  */
 function propertyToCss(property: string): string | null {
@@ -60,6 +52,93 @@ function propertyToCss(property: string): string | null {
     height: "height",
   };
   return map[property] ?? null;
+}
+
+/**
+ * Formats a value for a transform CSS property.
+ */
+function formatTransformValue(
+  property: string,
+  value: number | string,
+): string {
+  if (property === "x") return `translateX(${value}px)`;
+  if (property === "y") return `translateY(${value}px)`;
+  if (property === "rotation") return `rotate(${value}deg)`;
+  return String(value);
+}
+
+/**
+ * Builds a WAAPI keyframe array from a KeyframeTrack for a given CSS property.
+ */
+function buildWAAPIKeyframes(
+  track: KeyframeTrack,
+  cssProperty: string,
+): { keyframes: WAAPIKeyframe[]; duration: number } | null {
+  if (track.keyframes.length === 0) return null;
+
+  const sorted = [...track.keyframes].sort((a, b) => a.time - b.time);
+  const duration = sorted[sorted.length - 1]?.time ?? 0;
+
+  const keyframes = sorted.map((kf) => {
+    const value =
+      cssProperty === "transform"
+        ? formatTransformValue(track.property, kf.value)
+        : kf.value;
+    return {
+      [cssProperty]: value,
+      offset: duration > 0 ? kf.time / duration : 0,
+      easing: easingToCss(kf),
+    };
+  });
+
+  return { keyframes, duration };
+}
+
+/**
+ * Builds a single merged WAAPI keyframe animation for all transform
+ * properties of a given element. This avoids conflicting transform
+ * animations running simultaneously on the same element.
+ */
+function buildTransformKeyframes(
+  elementId: string,
+  tracks: KeyframeTrack[],
+): { keyframes: WAAPIKeyframe[]; duration: number } | null {
+  const transformTracks = tracks.filter(
+    (t) =>
+      t.elementId === elementId &&
+      (TRANSFORM_PROPERTIES as readonly string[]).includes(t.property),
+  );
+  if (transformTracks.length === 0) return null;
+
+  const allTimes = new Set<number>();
+  for (const t of transformTracks) {
+    for (const kf of t.keyframes) allTimes.add(kf.time);
+  }
+  const times = [...allTimes].sort((a, b) => a - b);
+  if (times.length === 0) return null;
+
+  const duration = Math.max(...times);
+
+  const keyframes = times.map((time) => {
+    const x = interpolateValue(
+      transformTracks.find((t) => t.property === "x")?.keyframes ?? [],
+      time,
+    );
+    const y = interpolateValue(
+      transformTracks.find((t) => t.property === "y")?.keyframes ?? [],
+      time,
+    );
+    const rotation = interpolateValue(
+      transformTracks.find((t) => t.property === "rotation")?.keyframes ?? [],
+      time,
+    );
+    return {
+      transform: `translateX(${x}px) translateY(${y}px) rotate(${rotation}deg)`,
+      offset: duration > 0 ? time / duration : 0,
+    };
+  });
+
+  return { keyframes, duration };
 }
 
 /**
@@ -79,17 +158,7 @@ function elementStyle(el: GraphicElement): string {
   `;
 
   if (el.type === "text") {
-    const p = el.properties as GraphicElement["properties"] & {
-      content: string;
-      fontFamily: string;
-      fontSize: number;
-      fontWeight: string;
-      fontStyle: string;
-      color: string;
-      textAlign: string;
-      lineHeight: number;
-      letterSpacing: number;
-    };
+    const p = el.properties;
     return (
       base +
       `
@@ -110,13 +179,7 @@ function elementStyle(el: GraphicElement): string {
   }
 
   if (el.type === "shape") {
-    const p = el.properties as GraphicElement["properties"] & {
-      shapeType: string;
-      fillColor: string;
-      strokeColor: string;
-      strokeWidth: number;
-      borderRadius: number;
-    };
+    const p = el.properties;
     const radius = getShapeRadius(p.shapeType, p.borderRadius);
     return (
       base +
@@ -129,10 +192,7 @@ function elementStyle(el: GraphicElement): string {
   }
 
   if (el.type === "image") {
-    const p = el.properties as GraphicElement["properties"] & {
-      src: string;
-      objectFit: string;
-    };
+    const p = el.properties;
     return (
       base +
       `
@@ -152,10 +212,7 @@ function elementStyle(el: GraphicElement): string {
  */
 function elementContent(el: GraphicElement): string {
   if (el.type === "text") {
-    const p = el.properties as GraphicElement["properties"] & {
-      content: string;
-    };
-    return escapeHtml(p.content);
+    return escapeHtml(el.properties.content);
   }
   return "";
 }
@@ -192,15 +249,33 @@ export function generateWebComponent(project: OgrafProject): string {
     })
     .join("\n");
 
-  // Build animation tracks code
-  const tracksCode = keyframeTracks
+  // Build transform-merged animation per element
+  const elementIds = [...new Set(keyframeTracks.map((t) => t.elementId))];
+  const transformTracksCode = elementIds
+    .map((id) => {
+      const result = buildTransformKeyframes(id, keyframeTracks);
+      if (!result) return "";
+      return `    this._addAnimation("${id}", ${JSON.stringify(result.keyframes)}, ${result.duration});`;
+    })
+    .filter(Boolean)
+    .join("\n");
+
+  // Build animation tracks for non-transform properties
+  const nonTransformTracks = keyframeTracks.filter(
+    (t) => !(TRANSFORM_PROPERTIES as readonly string[]).includes(t.property),
+  );
+  const tracksCode = nonTransformTracks
     .map((track) => {
       const cssProp = propertyToCss(track.property);
       if (!cssProp) return "";
-      const kf = buildWAAPIKeyframes(track, cssProp);
-      if (!kf) return "";
-      return `    this._addAnimation("${track.elementId}", ${JSON.stringify(kf)});`;
+      const result = buildWAAPIKeyframes(track, cssProp);
+      if (!result) return "";
+      return `    this._addAnimation("${track.elementId}", ${JSON.stringify(result.keyframes)}, ${result.duration});`;
     })
+    .filter(Boolean)
+    .join("\n");
+
+  const allTracksCode = [transformTracksCode, tracksCode]
     .filter(Boolean)
     .join("\n");
 
@@ -228,8 +303,8 @@ class Graphic extends HTMLElement {
     this.appendChild(el);
   }
 
-  _addAnimation(elementId, keyframes) {
-    this._animations.push({ elementId, keyframes });
+  _addAnimation(elementId, keyframes, duration) {
+    this._animations.push({ elementId, keyframes, duration });
   }
 
   _applyData(data) {
@@ -272,15 +347,14 @@ ${elementsCode}
       this._currentStep = goto !== undefined ? goto : (this._currentStep ?? -1) + (delta ?? 1);
       return { statusCode: 200, currentStep: this._currentStep };
     }
-${tracksCode}
+${allTracksCode}
     // Run animations via WAAPI
     const promises = [];
     for (const anim of this._animations) {
       const el = this._elements.get(anim.elementId);
       if (!el) continue;
-      const totalDuration = Math.max(...anim.keyframes.map(k => (k.offset || 0) * 1000));
       const animation = el.animate(anim.keyframes, {
-        duration: totalDuration > 0 ? totalDuration : 500,
+        duration: anim.duration > 0 ? anim.duration : 500,
         fill: "forwards",
         easing: "linear",
       });

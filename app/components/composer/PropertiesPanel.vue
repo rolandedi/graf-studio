@@ -35,24 +35,24 @@ function updateProp(key: keyof GraphicElement, value: unknown) {
 
 function updateTextProp(key: keyof TextProperties, value: unknown) {
   if (!el.value || el.value.type !== "text") return;
-  const next = { ...(el.value.properties as TextProperties), [key]: value };
+  const next = { ...el.value.properties, [key]: value };
   emit("update", el.value.id, { properties: next });
 }
 
 function updateShapeProp(key: keyof ShapeProperties, value: unknown) {
   if (!el.value || el.value.type !== "shape") return;
-  const next = { ...(el.value.properties as ShapeProperties), [key]: value };
+  const next = { ...el.value.properties, [key]: value };
   emit("update", el.value.id, { properties: next });
 }
 
 const textProps = computed(() => {
   if (!el.value || el.value.type !== "text") return null;
-  return el.value.properties as TextProperties;
+  return el.value.properties;
 });
 
 const shapeProps = computed(() => {
   if (!el.value || el.value.type !== "shape") return null;
-  return el.value.properties as ShapeProperties;
+  return el.value.properties;
 });
 </script>
 
@@ -101,61 +101,11 @@ const shapeProps = computed(() => {
             @update:model-value="(v) => updateProp('y', v)"
           />
           <InspectorField
-            label="Zoom X"
-            type="number"
-            step="0.1"
-            :model-value="1"
-            width="half"
-          />
-          <InspectorField
-            label="Zoom Y"
-            type="number"
-            step="0.1"
-            :model-value="1"
-            width="half"
-          />
-          <InspectorField
             label="Rotation"
             type="number"
             :model-value="el.rotation"
             width="half"
             @update:model-value="(v) => updateProp('rotation', v)"
-          />
-          <InspectorField
-            label="Anchor"
-            type="number"
-            :model-value="0"
-            width="half"
-          />
-        </div>
-      </InspectorSection>
-
-      <!-- CROPPING -->
-      <InspectorSection id="cropping" title="Cropping">
-        <div class="grid grid-cols-2 gap-1.5">
-          <InspectorField
-            label="Left"
-            type="number"
-            :model-value="0"
-            width="half"
-          />
-          <InspectorField
-            label="Right"
-            type="number"
-            :model-value="0"
-            width="half"
-          />
-          <InspectorField
-            label="Top"
-            type="number"
-            :model-value="0"
-            width="half"
-          />
-          <InspectorField
-            label="Bottom"
-            type="number"
-            :model-value="0"
-            width="half"
           />
         </div>
       </InspectorSection>
@@ -172,44 +122,6 @@ const shapeProps = computed(() => {
             :model-value="el.opacity"
             width="half"
             @update:model-value="(v) => updateProp('opacity', v)"
-          />
-          <div class="space-y-0.5">
-            <label
-              class="block text-[10px] uppercase tracking-wider text-[var(--text-secondary)]"
-            >
-              Mode
-            </label>
-            <Select :model-value="'normal'">
-              <SelectTrigger
-                class="h-6 w-full px-1.5 text-[11px] bg-[var(--bg-input)] border-[var(--border-panel)] rounded-[2px]"
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="normal">Normal</SelectItem>
-                <SelectItem value="multiply">Multiply</SelectItem>
-                <SelectItem value="screen">Screen</SelectItem>
-                <SelectItem value="overlay">Overlay</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </InspectorSection>
-
-      <!-- SPEED CHANGE -->
-      <InspectorSection id="speed" title="Speed Change">
-        <div class="grid grid-cols-2 gap-1.5">
-          <InspectorField
-            label="Speed"
-            type="number"
-            :model-value="100"
-            width="half"
-          />
-          <InspectorField
-            label="Pitch"
-            type="number"
-            :model-value="0"
-            width="half"
           />
         </div>
       </InspectorSection>

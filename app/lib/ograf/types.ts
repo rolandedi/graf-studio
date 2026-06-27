@@ -31,9 +31,8 @@ export interface Resolution {
 
 export type ElementType = "text" | "shape" | "image";
 
-export interface GraphicElement {
+export interface BaseGraphicElement {
   id: string;
-  type: ElementType;
   name: string;
   x: number;
   y: number;
@@ -42,8 +41,27 @@ export interface GraphicElement {
   rotation: number;
   opacity: number;
   zIndex: number;
-  properties: TextProperties | ShapeProperties | ImageProperties;
 }
+
+export interface TextGraphicElement extends BaseGraphicElement {
+  type: "text";
+  properties: TextProperties;
+}
+
+export interface ShapeGraphicElement extends BaseGraphicElement {
+  type: "shape";
+  properties: ShapeProperties;
+}
+
+export interface ImageGraphicElement extends BaseGraphicElement {
+  type: "image";
+  properties: ImageProperties;
+}
+
+export type GraphicElement =
+  | TextGraphicElement
+  | ShapeGraphicElement
+  | ImageGraphicElement;
 
 export interface TextProperties {
   content: string;
@@ -187,13 +205,19 @@ export const RESOLUTIONS: Resolution[] = [
   { width: 3840, height: 2160, label: "4K" },
 ];
 
+export const DEFAULT_RESOLUTION: Resolution = {
+  width: 1920,
+  height: 1080,
+  label: "Full HD",
+};
+
 // Factory: create a new empty project
 export function createEmptyProject(name = "Nouveau projet"): OgrafProject {
   return {
     id: crypto.randomUUID(),
     name,
     version: "1.0.0",
-    resolution: { ...RESOLUTIONS[1] }, // Full HD by default
+    resolution: { ...DEFAULT_RESOLUTION },
     supportsRealTime: true,
     supportsNonRealTime: false,
     stepCount: 1,
@@ -215,7 +239,7 @@ export function createEmptyProject(name = "Nouveau projet"): OgrafProject {
 }
 
 // Factory: create a default text element (lower third style)
-export function createTextElement(name = "Texte"): GraphicElement {
+export function createTextElement(name = "Texte"): TextGraphicElement {
   return {
     id: crypto.randomUUID(),
     type: "text",
@@ -242,7 +266,7 @@ export function createTextElement(name = "Texte"): GraphicElement {
 }
 
 // Factory: create a default shape element
-export function createShapeElement(name = "Forme"): GraphicElement {
+export function createShapeElement(name = "Forme"): ShapeGraphicElement {
   return {
     id: crypto.randomUUID(),
     type: "shape",

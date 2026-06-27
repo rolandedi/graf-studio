@@ -1,4 +1,4 @@
-import { reactive, computed, watch } from "vue";
+import { reactive, computed } from "vue";
 import type { OgrafProject, GraphicElement } from "../lib/ograf/types";
 import {
   createEmptyProject,
@@ -6,11 +6,9 @@ import {
   createShapeElement,
 } from "../lib/ograf/types";
 import {
-  getAllProjects,
-  getProject,
-  saveProject,
-  deleteProject as dbDeleteProject,
-} from "../lib/storage/indexeddb";
+  projectRepository,
+  type ProjectRepository,
+} from "../lib/ograf/project-repository";
 
 // Singleton state
 const state = reactive<{
@@ -28,25 +26,28 @@ const state = reactive<{
 // Debounced auto-save
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 
-// Strip Vue reactivity for IndexedDB compatibility
+// Strip Vue reactivity for persistence compatibility
 function toRaw<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj));
 }
 
-function scheduleAutoSave() {
+function scheduleAutoSave(repository: ProjectRepository) {
   if (!state.current) return;
   if (saveTimer) clearTimeout(saveTimer);
   saveTimer = setTimeout(async () => {
     if (state.current) {
       state.current.updatedAt = Date.now();
-      await saveProject(toRaw(state.current));
+      await repository.save(toRaw(state.current));
     }
   }, 800);
 }
 
-export function useProjectStore() {
+export function useProjectStore(
+  repository: ProjectRepository = projectRepository,
+) {
   const currentProject = computed(() => state.current);
   const projects = computed(() => state.projects);
+  const selectedElementId = computed(() => state.selectedElementId);
   const selectedElement = computed(() => {
     if (!state.current || !state.selectedElementId) return null;
     return (
@@ -59,7 +60,7 @@ export function useProjectStore() {
   async function loadProjects() {
     state.loading = true;
     try {
-      state.projects = await getAllProjects();
+      state.projects = await repository.getAll();
     } finally {
       state.loading = false;
     }
@@ -68,7 +69,7 @@ export function useProjectStore() {
   async function loadProject(id: string) {
     state.loading = true;
     try {
-      const project = await getProject(id);
+      const project = await repository.get(id);
       if (project) {
         state.current = project;
         state.selectedElementId = null;
@@ -81,18 +82,18 @@ export function useProjectStore() {
   function newProject(name?: string) {
     state.current = createEmptyProject(name);
     state.selectedElementId = null;
-    scheduleAutoSave();
+    scheduleAutoSave(repository);
   }
 
   async function saveCurrent() {
     if (!state.current) return;
     state.current.updatedAt = Date.now();
-    await saveProject(toRaw(state.current));
+    await repository.save(toRaw(state.current));
     await loadProjects();
   }
 
   async function deleteProject(id: string) {
-    await dbDeleteProject(id);
+    await repository.delete(id);
     if (state.current?.id === id) {
       state.current = null;
       state.selectedElementId = null;
@@ -110,7 +111,7 @@ export function useProjectStore() {
       type === "text" ? createTextElement() : createShapeElement();
     state.current.elements.push(el);
     state.selectedElementId = el.id;
-    scheduleAutoSave();
+    scheduleAutoSave(repository);
   }
 
   function removeElement(id: string) {
@@ -123,7 +124,7 @@ export function useProjectStore() {
     if (state.selectedElementId === id) {
       state.selectedElementId = null;
     }
-    scheduleAutoSave();
+    scheduleAutoSave(repository);
   }
 
   function updateElement(id: string, patch: Partial<GraphicElement>) {
@@ -131,7 +132,7 @@ export function useProjectStore() {
     const el = state.current.elements.find((e) => e.id === id);
     if (el) {
       Object.assign(el, patch);
-      scheduleAutoSave();
+      scheduleAutoSave(repository);
     }
   }
 
@@ -145,22 +146,13 @@ export function useProjectStore() {
         return el;
       })
       .filter(Boolean) as GraphicElement[];
-    scheduleAutoSave();
-  }
-
-  // Watch for changes to auto-save
-  if (import.meta.client) {
-    watch(
-      () => state.current,
-      () => scheduleAutoSave(),
-      { deep: true },
-    );
+    scheduleAutoSave(repository);
   }
 
   return {
-    state,
     currentProject,
     projects,
+    selectedElementId,
     selectedElement,
     loading,
     loadProjects,

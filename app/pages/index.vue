@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default",
+  layout: "shell",
 });
 
 // Redirect to composer by default

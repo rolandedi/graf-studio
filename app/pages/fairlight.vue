@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from "vue";
 import { Copy, FolderOpen } from "@lucide/vue";
 import { toast } from "vue-sonner";
 import { useProjectStore } from "~/composables/useProjectStore";
-import { RESOLUTIONS } from "~/lib/ograf/types";
+import { DEFAULT_RESOLUTION } from "~/lib/ograf/types";
 import type { Resolution } from "~/lib/ograf/types";
 
 useHead({ title: "Fairlight" });
@@ -11,7 +11,7 @@ useHead({ title: "Fairlight" });
 const store = useProjectStore();
 const project = computed(() => store.currentProject.value);
 
-const resolution = ref<Resolution>({ ...RESOLUTIONS[1] });
+const resolution = ref<Resolution>({ ...DEFAULT_RESOLUTION });
 
 // Refs to player frame components
 const previewFrameRef = ref<InstanceType<
@@ -21,14 +21,28 @@ const programFrameRef = ref<InstanceType<
   typeof import("~/components/controller/PlayerFrame.vue").default
 > | null>(null);
 
+const previewCurrentStep = computed(
+  () => previewFrameRef.value?.bridge.currentStep.value,
+);
+const programCurrentStep = computed(
+  () => programFrameRef.value?.bridge.currentStep.value,
+);
+const previewIsLoaded = computed(
+  () => previewFrameRef.value?.isLoaded ?? false,
+);
+const programIsLoaded = computed(
+  () => programFrameRef.value?.isLoaded ?? false,
+);
+
 // Data for each player
 const previewData = ref<Record<string, unknown>>({});
 const programData = ref<Record<string, unknown>>({});
 
 onMounted(async () => {
   await store.loadProjects();
-  if (!project.value && store.projects.value.length > 0) {
-    await store.loadProject(store.projects.value[0].id);
+  const firstProject = store.projects.value[0];
+  if (!project.value && firstProject) {
+    await store.loadProject(firstProject.id);
   } else if (!project.value) {
     store.newProject("Mon Lower Third");
     store.addElement("shape");
@@ -175,8 +189,8 @@ async function loadProject(id: string) {
         />
         <ControllerPlayerControls
           :step-count="project.stepCount"
-          :current-step="previewFrameRef?.bridge.currentStep.value"
-          :is-loaded="previewFrameRef?.isLoaded.value ?? false"
+          :current-step="previewCurrentStep"
+          :is-loaded="previewIsLoaded"
           @play="previewPlay"
           @stop="previewStop"
           @goto="previewGoto"
@@ -202,8 +216,8 @@ async function loadProject(id: string) {
         />
         <ControllerPlayerControls
           :step-count="project.stepCount"
-          :current-step="programFrameRef?.bridge.currentStep.value"
-          :is-loaded="programFrameRef?.isLoaded.value ?? false"
+          :current-step="programCurrentStep"
+          :is-loaded="programIsLoaded"
           @play="programPlay"
           @stop="programStop"
           @goto="programGoto"

@@ -160,7 +160,7 @@ function handleAddTrack(elementId: string, property: string) {
       <div class="w-60 shrink-0 border-r border-[var(--border-panel)]">
         <ComposerMediaPoolPanel
           :elements="project.elements"
-          :selected-element-id="store.state.selectedElementId"
+          :selected-element-id="store.selectedElementId.value"
           :project-name="project.name"
           :project-resolution="`${project.resolution.width}×${project.resolution.height} (${project.resolution.label})`"
           :project-step-count="project.stepCount"
@@ -193,7 +193,7 @@ function handleAddTrack(elementId: string, property: string) {
     <div class="h-48 shrink-0">
       <ComposerTimelineEditor
         :tracks="project?.keyframes ?? []"
-        :selected-element-id="store.state.selectedElementId"
+        :selected-element-id="store.selectedElementId.value"
         :element-name="selectedElement?.name ?? null"
         @add-keyframe="handleAddKeyframe"
         @remove-keyframe="handleRemoveKeyframe"
