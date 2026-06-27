@@ -16,3 +16,4 @@
 - https://github.com/muxinc/media-chrome
 - https://github.com/greensock/GSAP
 - https://github.com/juliangarnier/anime
+- https://github.com/motiondivision/motion
