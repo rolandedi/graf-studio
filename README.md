@@ -25,31 +25,18 @@ GrafStudio est un éditeur professionnel de **lower thirds** et de graphiques TV
 - **💾 Persistance locale** — Stockage IndexedDB, aucun backend requis
 - **🎨 Interface professionnelle** — Design inspiré de DaVinci Resolve, dark mode exclusif
 - **🔌 Communication iframe** — Protocole postMessage (`useOgrafBridge`) pour le contrôle sandboxé des players
-- **🧩 Zero dépendance runtime** — Le Web Component généré est autonome (Web Animations API, CSS transforms)
+- **🧩 Zero dépendance runtime** — Le Web Component généré est autonome (Web Animations API, CSS transforms, Assets)
 
 ---
 
 ## 🏗️ Architecture
 
-```
-┌─ TopBar ──────────────────────────────────────────────────────────┐
-│  [Media Pool] [Effects] [Index] [Sound Library] | [Quick Export]   │
-├──────────┬─────────────────────────────────┬───────────────────────┤
-│ LeftSlot │        CenterSlot               │      RightSlot        │
-│ (Media   │  • CanvasPreview (iframe)       │  • Inspector          │
-│  Pool /  │  • Timeline (keyframes)         │    (onglets Video,    │
-│  Effects)│                                  │     Audio, Effects…)  │
-├──────────┴─────────────────────────────────┴───────────────────────┤
-│  ModuleNav  [Media] [Cut] [Edit●] [Fusion] [Color] [Fairlight●]…  │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-| Module                      | Route        | Rôle                                          |
-| --------------------------- | ------------ | --------------------------------------------- |
-| **Edit**                    | `/edit`      | Composer — Édition des graphiques lower third |
-| **Fairlight**               | `/fairlight` | Controller — Interface Preview/Program        |
-| Media                       | `/media`     | Réservé (v2)                                  |
-| Cut, Fusion, Color, Deliver | —            | Réservés (v2)                                 |
+| Module         | Route         | Rôle                                          |
+| -------------- | ------------- | --------------------------------------------- |
+| **Composer**   | `/composer`   | Composer — Édition des graphiques lower third |
+| **Controller** | `/controller` | Controller — Interface Preview/Program        |
+| Library        | `/library`    | Réservé (v2)                                  |
+| Exporter       | `/exporter`   | Réservé (v2)                                  |
 
 ---
 
@@ -60,10 +47,9 @@ ograf-tool/
 ├── app/
 │   ├── pages/
 │   │   ├── index.vue              # Landing
-│   │   ├── edit.vue               # Composer (éditeur)
-│   │   ├── fairlight.vue          # Controller (preview/program)
-│   │   ├── composer.vue           # Alias → /edit
-│   │   ├── controller.vue         # Alias → /fairlight
+│   │   ├── composer.vue           # Composer (éditeur)
+│   │   ├── library.vue            # Library (v2)
+│   │   ├── exporter.vue           # Exporter (v2)
 │   │   └── player.vue             # Player autonome
 │   ├── components/
 │   │   ├── layout/                # Shell, TopBar, ModuleNav, SidebarTab
