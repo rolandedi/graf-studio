@@ -152,7 +152,7 @@ interface Keyframe {
 
 ### Persistance IndexedDB
 
-- Base : `ograf-builder`
+- Base : `graf-studio`
 - Store : `projects` (keyPath: `id`)
 - Opérations : CRUD + liste + export/import JSON
 
